@@ -1,0 +1,44 @@
+@startuml
+class com.slinky.myyelp.MainActivity {
+# void onCreate(Bundle)
+}
+class com.slinky.myyelp.yelp_api.YelpClient {
++ YelpAPI build()
+}
+class com.slinky.myyelp.yelp_api.YelpResponse {
++ ArrayList<YelpBusiness> businesses
++ int total
+}
+class com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness {
++ String id
++ String name
++ String imageUrl
++ String url
++ float rating
++ String price
++ YelpLocation location
++ ArrayList<YelpCategory> categories
++ String displayPhone
+}
+class com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness.YelpLocation {
++ String address1
++ String city
++ String state
++ String zipCode
++ String country
++ String State
++ ArrayList<String> displayAddress
+}
+class com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness.YelpCategory {
++ String title
+}
+interface com.slinky.myyelp.yelp_api.YelpAPI {
+~ Call<YelpResponse> getBusinesses(String,String)
+}
+
+
+androidx.appcompat.app.AppCompatActivity <|-- com.slinky.myyelp.MainActivity
+com.slinky.myyelp.yelp_api.YelpResponse +.. com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness
+com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness +.. com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness.YelpLocation
+com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness +.. com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness.YelpCategory
+@enduml
