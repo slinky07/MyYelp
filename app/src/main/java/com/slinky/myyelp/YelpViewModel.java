@@ -1,8 +1,30 @@
 package com.slinky.myyelp;
 
-public class YelpViewModel {
+import android.content.Context;
 
-    private final String TAG = getClass().getSimpleName();
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
+import com.slinky.myyelp.yelp_api.YelpResponse;
 
+import java.util.List;
+
+public class YelpViewModel extends ViewModel {
+
+    private YelpRepo yelpRepo;
+    private Context context;
+    private MutableLiveData<List<YelpResponse.YelpBusiness>> yelpResponseLiveData;
+
+    public YelpViewModel(Context context) {
+        yelpRepo = new YelpRepo();
+        this.context = context;
+    }
+
+    public LiveData<List<YelpResponse.YelpBusiness>> getYelpResponse(String query) {
+        if (yelpResponseLiveData == null) {
+            yelpResponseLiveData = yelpRepo.getYelpResponse(context, query);
+        }
+        return yelpResponseLiveData;
+    }
 }

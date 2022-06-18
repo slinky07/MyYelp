@@ -3,6 +3,7 @@ package com.slinky.myyelp.yelp_api;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * YelpResponse is  class that represents the JSON response from the aYelp API.
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 public class YelpResponse {
 
     @SerializedName("businesses")
-    public ArrayList<YelpBusiness> businesses;
+    public List<YelpBusiness> businesses;
 
     @SerializedName("total") // at bottom of JSON response
     public int total;

@@ -2,6 +2,7 @@ package com.slinky.myyelp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import com.slinky.myyelp.yelp_api.YelpAPI;
 import com.slinky.myyelp.yelp_api.YelpClient;
 import com.slinky.myyelp.yelp_api.YelpResponse;
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -22,32 +24,25 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 //    ArrayList<YelpResponse.YelpBusiness> businesses;
+    private final String TAG = getClass().getSimpleName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        MutableLiveData<ArrayList<YelpResponse.YelpBusiness>> businesses = new MutableLiveData<>();
-
-        //-------------------------------
-
-        YelpAPI yelpAPI = new YelpClient().build();
-        yelpAPI.getBusinesses("burger", "Montreal", 50, 50).enqueue(new Callback<YelpResponse>() {
-            @Override
-            public void onResponse(Call<YelpResponse> call, Response<YelpResponse> response) {
-                YelpResponse res = response.body();
-                Log.d("SlinkyTest", res.toString());
-                Toast.makeText(getApplicationContext(), "Total: " + res.total, Toast.LENGTH_LONG).show();
-                businesses.setValue(res.businesses);
-            }
-
-            @Override
-            public void onFailure(Call<YelpResponse> call, Throwable t) {
-
-            }
-        });
-
+        // check if the network is available
+        if (YelpClient.isNetworkAvailable(this)) {
+            // get the search query
+            String query = getIntent().getStringExtra("query");
+            YelpViewModel yelpViewModel = new YelpViewModel(this);
+            yelpViewModel.getYelpResponse("burger").observe(this, yelpBusinesses -> {
+                if (yelpBusinesses != null && !yelpBusinesses.isEmpty()) {
+                    Log.d(TAG, "observe onChanged: " + yelpBusinesses.size());
+                }
+            });
+        } else {
+            Toast.makeText(this, "No network available", Toast.LENGTH_LONG).show();
+        }
   }
 
   @SuppressLint("UseCompatLoadingForDrawables")

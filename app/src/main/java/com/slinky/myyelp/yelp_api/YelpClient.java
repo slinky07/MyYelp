@@ -1,5 +1,9 @@
 package com.slinky.myyelp.yelp_api;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import androidx.annotation.NonNull;
 
 import java.io.IOException;
@@ -33,5 +37,11 @@ public class YelpClient {
                 .client(httpClient)
                 .build();
         return retrofit.create(YelpAPI.class);
+    }
+
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
     }
 }
