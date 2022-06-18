@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">MyYelp</string>
+    <string name="search_bar">Search Bar</string>
+    <string name="search_bar_hint">Search here (e.g. sushi)</string>
+
 </resources>
