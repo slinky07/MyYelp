@@ -25,49 +25,64 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 //    ArrayList<YelpResponse.YelpBusiness> businesses;
     private final String TAG = getClass().getSimpleName();
+    private SearchView searchView;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // check if the network is available
-        if (YelpClient.isNetworkAvailable(this)) {
-            // get the search query
-            String query = getIntent().getStringExtra("query");
-            YelpViewModel yelpViewModel = new YelpViewModel(this);
-            yelpViewModel.getYelpResponse("burger").observe(this, yelpBusinesses -> {
-                if (yelpBusinesses != null && !yelpBusinesses.isEmpty()) {
-                    Log.d(TAG, "observe onChanged: " + yelpBusinesses.size());
-                }
-            });
-        } else {
-            Toast.makeText(this, "No network available", Toast.LENGTH_LONG).show();
-        }
+
   }
 
   @SuppressLint("UseCompatLoadingForDrawables")
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.menu, menu);
 
-      MenuItem searchItem = menu.findItem(R.id.search_bar_ID);
-      SearchView searchView = (SearchView) searchItem.getActionView();
-      // set hint string from search_bar_hint ID
-//      searchView.setIconifiedByDefault(false);
-      searchView.setQueryHint(getString(R.string.search_bar_hint));
-      searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-          @Override
-          public boolean onQueryTextSubmit(String query) {
-              searchView.clearFocus();
-              Toast.makeText(getApplicationContext(), "Searching for: " + query, Toast.LENGTH_LONG).show();
-              return false;
-          }
-
-          @Override
-          public boolean onQueryTextChange(String newText) {
-              return false;
-          }
-      });
+    setSearchView(menu);
+    searchViewListener();
     return super.onCreateOptionsMenu(menu);
   }
+
+  private void setSearchView(Menu menu) {
+      MenuItem searchItem = menu.findItem(R.id.search_bar_ID);
+      searchView = (SearchView) searchItem.getActionView();
+      searchView.setQueryHint(getString(R.string.search_bar_hint));
+  }
+
+  private void searchViewListener() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
+
+                getYelpResponse(query);
+
+                Log.d(TAG, "onQueryTextSubmit: " + query);
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Log.d(TAG, "onQueryTextChange: " + newText);
+                return false;
+            }
+        });
+  }
+
+  private void getYelpResponse(String query) {
+      if (YelpClient.isNetworkAvailable(this)) {
+          YelpViewModel yelpViewModel = new YelpViewModel(this);
+
+          yelpViewModel.getYelpResponse(query).observe(this, yelpBusinesses -> {
+              if (yelpBusinesses != null && !yelpBusinesses.isEmpty()) {
+                  Log.d(TAG, "observe onChanged: " + yelpBusinesses.size());
+              }
+          });
+      } else {
+          Toast.makeText(this, "No network available", Toast.LENGTH_LONG).show();
+      }
+  }
+
 }
 
