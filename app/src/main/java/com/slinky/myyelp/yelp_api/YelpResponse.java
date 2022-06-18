@@ -1,5 +1,7 @@
 package com.slinky.myyelp.yelp_api;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -60,6 +62,15 @@ public class YelpResponse {
 
         @SerializedName("display_phone")
         public String displayPhone;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "YelpResponse{" +
+                " [...]" +
+                ", total=" + total +
+                '}';
     }
 
 }

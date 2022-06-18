@@ -1,12 +1,25 @@
 @startuml
 class com.slinky.myyelp.MainActivity {
+- String TAG
+- SearchView searchView
 # void onCreate(Bundle)
++ boolean onCreateOptionsMenu(Menu)
+- void setSearchView(Menu)
+- void searchViewListener()
+- void requestYelpResponse(String)
 }
 class com.slinky.myyelp.yelp_api.YelpClient {
 + YelpAPI build()
++ {static} boolean isNetworkAvailable(Context)
+}
+class com.slinky.myyelp.YelpViewModel {
+- YelpRepo yelpRepo
+- Context context
+- MutableLiveData<List<YelpResponse.YelpBusiness>> yelpResponseLiveData
++ LiveData<List<YelpResponse.YelpBusiness>> getYelpResponse(String)
 }
 class com.slinky.myyelp.yelp_api.YelpResponse {
-+ ArrayList<YelpBusiness> businesses
++ List<YelpBusiness> businesses
 + int total
 }
 class com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness {
@@ -32,13 +45,29 @@ class com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness.YelpLocation {
 class com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness.YelpCategory {
 + String title
 }
+class com.slinky.myyelp.YelpRepo {
+- String TAG
++ MutableLiveData<List<YelpResponse.YelpBusiness>> getYelpResponse(Context,String)
+}
+class com.slinky.myyelp.YelpAdapter {
+- List<YelpResponse.YelpBusiness> businesses
++ int getItemCount()
++ YelpAdapter.YelpViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(YelpAdapter.YelpViewHolder,int)
+}
+class com.slinky.myyelp.YelpAdapter.YelpViewHolder {
+}
 interface com.slinky.myyelp.yelp_api.YelpAPI {
-~ Call<YelpResponse> getBusinesses(String,String)
+~ Call<YelpResponse> getBusinesses(String,String,int,int)
 }
 
 
 androidx.appcompat.app.AppCompatActivity <|-- com.slinky.myyelp.MainActivity
+androidx.lifecycle.ViewModel <|-- com.slinky.myyelp.YelpViewModel
 com.slinky.myyelp.yelp_api.YelpResponse +.. com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness
 com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness +.. com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness.YelpLocation
 com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness +.. com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness.YelpCategory
+com.slinky.myyelp.Adapter <|-- com.slinky.myyelp.YelpAdapter
+com.slinky.myyelp.YelpAdapter +.. com.slinky.myyelp.YelpAdapter.YelpViewHolder
+com.slinky.myyelp.ViewHolder <|-- com.slinky.myyelp.YelpAdapter.YelpViewHolder
 @enduml

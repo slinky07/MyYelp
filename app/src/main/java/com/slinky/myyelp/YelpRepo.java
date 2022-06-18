@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.slinky.myyelp.yelp_api.YelpAPI;
@@ -25,7 +26,7 @@ public class YelpRepo {
        YelpAPI yelpAPI = new YelpClient().build();
        yelpAPI.getBusinesses(query, "Montreal", 50, 50).enqueue(new Callback<YelpResponse>() {
             @Override
-            public void onResponse(Call<YelpResponse> call, Response<YelpResponse> response) {
+            public void onResponse(@NonNull Call<YelpResponse> call, @NonNull Response<YelpResponse> response) {
                 Log.d(TAG, "onResponse: " + response.body().toString());
 
                 if (response.isSuccessful() && response.body() != null) {

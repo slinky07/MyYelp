@@ -1,8 +1,6 @@
 package com.slinky.myyelp;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -12,28 +10,16 @@ import android.view.MenuItem;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.slinky.myyelp.yelp_api.YelpAPI;
 import com.slinky.myyelp.yelp_api.YelpClient;
-import com.slinky.myyelp.yelp_api.YelpResponse;
-import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
-//    ArrayList<YelpResponse.YelpBusiness> businesses;
     private final String TAG = getClass().getSimpleName();
     private SearchView searchView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
   }
 
   @SuppressLint("UseCompatLoadingForDrawables")
@@ -46,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void setSearchView(Menu menu) {
-      MenuItem searchItem = menu.findItem(R.id.search_bar_ID);
+      MenuItem searchItem = menu.findItem(R.id.search_bar_ID); //TODO implement binder
       searchView = (SearchView) searchItem.getActionView();
       searchView.setQueryHint(getString(R.string.search_bar_hint));
   }
@@ -57,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 searchView.clearFocus();
 
-                getYelpResponse(query);
+                requestYelpResponse(query);
 
                 Log.d(TAG, "onQueryTextSubmit: " + query);
                 return false;
@@ -70,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         });
   }
 
-  private void getYelpResponse(String query) {
+  private void requestYelpResponse(String query) {
       if (YelpClient.isNetworkAvailable(this)) {
           YelpViewModel yelpViewModel = new YelpViewModel(this);
 

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.slinky.myyelp.yelp_api.YelpResponse;
 
 import java.util.List;
-
+//TODO implement it like they did in the repo
 public class YelpAdapter extends RecyclerView.Adapter<YelpAdapter.YelpViewHolder> {
     private List<YelpResponse.YelpBusiness> businesses;
 
