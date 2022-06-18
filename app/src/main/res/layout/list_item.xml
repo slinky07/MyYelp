@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:weightSum="3"
+        >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/Name_TV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_marginBottom="5dp"
+                android:text="@{}"
+                android:textSize="15sp" />
+            <RatingBar
+                android:id="@+id/Rating_RB"
+                style="@style/customRatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:numStars="5"
+                android:layout_marginStart="10dp"
+                android:rating="@{restaurant.rating}"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="3dp">
+
+            <TextView
+                android:id="@+id/price_TV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="5dp"
+                android:text="@{restaurant.price}"
+                android:textStyle="bold"
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/category_TV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="5dp"
+                android:text="@{restaurant.categories.toString()}"
+                android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/phone_TV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textStyle="bold"
+                android:layout_marginBottom="5dp"
+                android:text="@{restaurant.displayPhone}"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/address_TV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@{location.displayAddress.toString()}"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:scaleType="centerCrop"
+            android:layout_gravity="end"
+            tools:srcCompat="@tools:sample/backgrounds/scenic"
+            android:contentDescription="@string/image_from_api_for_glide" />
+    </LinearLayout>
+
+<data>
+    <variable
+        name="restaurant"
+        type="com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness" />
+    <variable
+        name="location"
+        type="com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness.YelpLocation" />
+</data>
+
+</layout>
+
+<!--    tools:srcCompat="@tools:sample/backgrounds/scenic" imageview src taken out-->

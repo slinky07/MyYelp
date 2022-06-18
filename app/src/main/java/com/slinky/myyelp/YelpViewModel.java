@@ -29,4 +29,7 @@ public class YelpViewModel extends ViewModel {
         }
         return yelpResponseLiveData;
     }
+
+    // change adapter when new data is available
+
 }

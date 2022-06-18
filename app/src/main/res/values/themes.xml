@@ -6,8 +6,8 @@
         <item name="colorPrimaryVariant">@color/red_700</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorSecondary">@android:color/holo_orange_light</item>
+        <item name="colorSecondaryVariant">#FFEB3B</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
@@ -17,5 +17,8 @@
     <style name="ThemeOverlay.SearchView" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary">
         <item name="android:editTextColor">@color/red_700</item>
         <item name="android:textColorHint">@color/red_200</item>
+    </style>
+    <style name="customRatingBar"
+        parent="android:style/Widget.Material.RatingBar.Small">
     </style>
 </resources>

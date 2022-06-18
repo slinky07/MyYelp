@@ -35,7 +35,7 @@ public class YelpResponse {
         @SerializedName("location")
         public YelpLocation location;
 
-        class YelpLocation {
+        public class YelpLocation {
             @SerializedName("address1")
             public String address1;
             @SerializedName("city")
@@ -55,7 +55,7 @@ public class YelpResponse {
         @SerializedName("categories")
         public ArrayList<YelpCategory> categories;
 
-        class YelpCategory {
+        public class YelpCategory {
             @SerializedName("title")
             public String title;
         }
