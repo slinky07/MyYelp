@@ -8,9 +8,7 @@ public interface YelpAPI {
 
     @GET("businesses/search")
     Call<YelpResponse> getBusinesses(@Query("term") String term,
-                                     @Query("location") String location,
-                                     @Query("limit") int limit,
-                                     @Query("offset") int offset);
+                                     @Query("location") String location);
     /*
     @GET("businesses/search")
     Call<YelpResponse> getBusinesses(@Query("term") String term,

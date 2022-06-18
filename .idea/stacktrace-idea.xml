@@ -3,6 +3,8 @@
   <component name="StacktraceSettings">
     <option name="packages">
       <set>
+        <option value="androidx.databinding" />
+        <option value="androidx.databinding.library" />
         <option value="com.slinky.myyelp" />
       </set>
     </option>

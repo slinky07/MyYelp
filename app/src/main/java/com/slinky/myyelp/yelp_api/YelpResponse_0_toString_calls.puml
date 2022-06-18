@@ -1,0 +1,176 @@
+@startuml
+
+/' diagram meta data start
+config=CallConfiguration;
+{
+  "rootMethod": "com.slinky.myyelp.yelp_api.YelpResponse#toString()",
+  "projectClassification": {
+    "searchMode": "OpenProject", // OpenProject, AllProjects
+    "includedProjects": "",
+    "pathEndKeywords": "*.impl",
+    "isClientPath": "",
+    "isClientName": "",
+    "isTestPath": "",
+    "isTestName": "",
+    "isMappingPath": "",
+    "isMappingName": "",
+    "isDataAccessPath": "",
+    "isDataAccessName": "",
+    "isDataStructurePath": "",
+    "isDataStructureName": "",
+    "isInterfaceStructuresPath": "",
+    "isInterfaceStructuresName": "",
+    "isEntryPointPath": "",
+    "isEntryPointName": "",
+    "treatFinalFieldsAsMandatory": false
+  },
+  "graphRestriction": {
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "removeByInheritance": "", // inheritance/annotation based filtering is done in a second step
+    "removeByAnnotation": "",
+    "removeByClassPackage": "", // cleanup the graph after inheritance/annotation based filtering is done
+    "removeByClassName": "",
+    "cutMappings": false,
+    "cutEnum": true,
+    "cutTests": true,
+    "cutClient": true,
+    "cutDataAccess": true,
+    "cutInterfaceStructures": true,
+    "cutDataStructures": true,
+    "cutGetterAndSetter": true,
+    "cutConstructors": true
+  },
+  "graphTraversal": {
+    "forwardDepth": 3,
+    "backwardDepth": 3,
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "hideMappings": false,
+    "hideDataStructures": false,
+    "hidePrivateMethods": true,
+    "hideInterfaceCalls": true, // indirection: implementation -> interface (is hidden) -> implementation
+    "onlyShowApplicationEntryPoints": false, // root node is included
+    "useMethodCallsForStructureDiagram": "ForwardOnly" // ForwardOnly, BothDirections, No
+  },
+  "details": {
+    "aggregation": "GroupByClass", // ByClass, GroupByClass, None
+    "showMethodParametersTypes": false,
+    "showMethodParametersNames": false,
+    "showMethodReturnType": false,
+    "showPackageLevels": 2,
+    "showCallOrder": false,
+    "edgeMode": "MethodsOnly", // TypesOnly, MethodsOnly, TypesAndMethods, MethodsAndDirectTypeUsage
+    "showDetailedClassStructure": false
+  },
+  "rootClass": "com.slinky.myyelp.yelp_api.YelpResponse",
+  "extensionCallbackMethod": "" // qualified.class.name#methodName - signature: public static String method(String)
+}
+diagram meta data end '/
+
+
+
+digraph g {
+    rankdir="LR"
+    splines=polyline
+    
+
+'nodes 
+subgraph cluster_899637460 { 
+   	label=slinky
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   subgraph cluster_1049444802 { 
+   	label=myyelp
+	labeljust=l
+	fillcolor="#d8d8d8"
+	style=filled
+   
+   subgraph cluster_1931654655 { 
+   	label=YelpRepo
+	labeljust=l
+	fillcolor=white
+	style=filled
+   
+   YelpRepo1716960111XXXgetYelpResponse406701772[
+	label="+ getYelpResponse()"
+	style=filled
+	fillcolor=white
+	tooltip="YelpRepo
+
+null"
+	fontcolor=darkgreen
+];
+} 
+
+subgraph cluster_2134107415 { 
+   	label=YelpViewModel
+	labeljust=l
+	fillcolor=white
+	style=filled
+   
+   YelpViewModel1716960111XXXgetYelpResponse1808118735[
+	label="+ getYelpResponse()"
+	style=filled
+	fillcolor=white
+	tooltip="YelpViewModel
+
+null"
+	fontcolor=darkgreen
+];
+} 
+
+subgraph cluster_410223173 { 
+   	label=MainActivity
+	labeljust=l
+	fillcolor=white
+	style=filled
+   
+   MainActivity1716960111XXXonCreateOptionsMenu2394495[
+	label="+ onCreateOptionsMenu()"
+	style=filled
+	fillcolor=white
+	tooltip="MainActivity
+
+null"
+	fontcolor=darkgreen
+];
+} 
+
+subgraph cluster_52300137 { 
+   	label=YelpResponse
+	labeljust=l
+	fillcolor=white
+	style=filled
+   
+   YelpResponse1867393960XXXtoString0[
+	label="+ toString()"
+	style=filled
+	fillcolor=white
+	tooltip="YelpResponse
+
+null"
+	penwidth=4
+	fontcolor=darkgreen
+];
+} 
+} 
+} 
+
+'edges    
+MainActivity1716960111XXXonCreateOptionsMenu2394495 -> YelpViewModel1716960111XXXgetYelpResponse1808118735;
+YelpRepo1716960111XXXgetYelpResponse406701772 -> YelpResponse1867393960XXXtoString0;
+YelpViewModel1716960111XXXgetYelpResponse1808118735 -> YelpRepo1716960111XXXgetYelpResponse406701772;
+    
+}
+@enduml

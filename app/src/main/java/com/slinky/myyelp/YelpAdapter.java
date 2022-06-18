@@ -6,7 +6,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -42,12 +41,12 @@ public class YelpAdapter extends RecyclerView.Adapter<YelpAdapter.YelpViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull YelpAdapter.YelpViewHolder holder, int position) {
-        holder.binding.setRestaurant(businesses.get(position));
-        holder.binding.setLocation(businesses.get(position).location);
+        holder.binding.setYelpBusiness(businesses.get(position));
+        holder.binding.setYelpLocation(businesses.get(position).location);
         // set image from imageUrl with Glide
         Glide.with(holder.binding.getRoot().getContext())
                 .load(businesses.get(position).imageUrl)
-                .into(holder.binding.imageView3);
+                .into(holder.binding.restaurantIMG);
 
         holder.binding.getRoot().setOnClickListener(v -> {
             // TODO implement SQLite database to save the object into favorite list
@@ -56,7 +55,7 @@ public class YelpAdapter extends RecyclerView.Adapter<YelpAdapter.YelpViewHolder
     }
 
     static class YelpViewHolder extends RecyclerView.ViewHolder {
-        private ListItemBinding binding;
+        private final ListItemBinding binding;
 
         public YelpViewHolder(@NonNull ListItemBinding binding) {
             super(binding.getRoot());

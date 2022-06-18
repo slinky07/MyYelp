@@ -18,7 +18,7 @@ public class YelpResponse {
     @SerializedName("total") // at bottom of JSON response
     public int total;
 
-    public class YelpBusiness {
+      public class YelpBusiness {
 
         @SerializedName("id")
         public String id;

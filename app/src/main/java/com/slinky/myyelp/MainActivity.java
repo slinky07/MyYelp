@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         initUI();
@@ -39,7 +38,9 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void setSearchView(Menu menu) {
-      MenuItem searchItem = menu.findItem(R.id.search_bar_ID); //TODO implement binder
+//      MenuItem searchItem = menu.findItem(R.id.search_bar_ID); //TODO implement binder
+      MenuItem searchItem = menu.findItem(R.id.search_bar_ID);
+
       searchView = (SearchView) searchItem.getActionView();
       searchView.setQueryHint(getString(R.string.search_bar_hint));
   }

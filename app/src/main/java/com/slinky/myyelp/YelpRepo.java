@@ -24,7 +24,7 @@ public class YelpRepo {
        final  MutableLiveData<List<YelpResponse.YelpBusiness>> yelpResponseLiveData = new MutableLiveData<>();
 
        YelpAPI yelpAPI = new YelpClient().build();
-       yelpAPI.getBusinesses(query, "Montreal", 50, 50).enqueue(new Callback<YelpResponse>() {
+       yelpAPI.getBusinesses(query, "Montreal").enqueue(new Callback<YelpResponse>() {
             @Override
             public void onResponse(@NonNull Call<YelpResponse> call, @NonNull Response<YelpResponse> response) {
                 Log.d(TAG, "onResponse: " + response.body().toString());
