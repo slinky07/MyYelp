@@ -36,6 +36,7 @@ public class LocalYelpDatabase extends SQLiteOpenHelper {
                 "phone TEXT, " +
                 "price TEXT, " +
                 "rating TEXT, " +
+                "category TEXT, " +
                 "image_url TEXT)");
     }
 
@@ -48,10 +49,11 @@ public class LocalYelpDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("name", business.name);
-        values.put("address", business.location.displayAddress.toString());
+        values.put("address", business.location.toString());
         values.put("phone", business.displayPhone);
         values.put("price", business.price);
         values.put("rating", business.rating);
+        values.put("category", business.categoryToString());
         values.put("image_url", business.imageUrl);
         db.insert(TABLE_NAME, null, values);
         db.close();
@@ -69,6 +71,12 @@ public class LocalYelpDatabase extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getReadableDatabase();
         return db.rawQuery(query, null);
+    }
+
+    // drop database
+    public void drop() {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
     }
 
 }

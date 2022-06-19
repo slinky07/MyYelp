@@ -20,6 +20,7 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
+import com.slinky.myyelp.database.LocalYelpDatabase;
 import com.slinky.myyelp.databinding.ActivityMainBinding;
 import com.slinky.myyelp.yelp_api.YelpClient;
 
@@ -39,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         Log.d(TAG, "onCreate: ");
+
+//        LocalYelpDatabase db = LocalYelpDatabase.getInstance(this);
+//        db.onCreate(db.getWritableDatabase());
 
         initUI();
         spinner();

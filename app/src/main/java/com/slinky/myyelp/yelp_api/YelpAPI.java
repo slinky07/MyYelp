@@ -10,6 +10,13 @@ public interface YelpAPI {
     Call<YelpResponse> getBusinesses(@Query("term") String term,
                                      @Query("location") String location);
 
+    /**
+     * @deprecated USE yelpRepo.sortByRating() or yelpRepo.sortByPrice() instead
+     * @param term search term
+     * @param location location
+     * @param sortBy sort by
+     * @return yelp response
+     */
     @GET("businesses/search")
     Call<YelpResponse> getBusinesses(@Query("term") String term,
                                      @Query("location") String location,

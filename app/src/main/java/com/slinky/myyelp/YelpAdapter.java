@@ -18,6 +18,9 @@ import java.util.Objects;
 
 public class YelpAdapter extends RecyclerView.Adapter<YelpAdapter.YelpViewHolder> {
     private List<YelpResponse.YelpBusiness> businesses;
+    private boolean isFavorites;
+
+
     YelpRepo yelpRepo;
 
     public YelpAdapter(Context context) {
@@ -44,7 +47,11 @@ public class YelpAdapter extends RecyclerView.Adapter<YelpAdapter.YelpViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull YelpAdapter.YelpViewHolder holder, int position) {
-        onBindSetElements(holder, position);
+        if (!isFavorites) {
+            onBindSetElements(holder, position);
+        } else {
+            onBindSetElementsFavorites(holder, position);
+        }
         //        holder.binding.setYelpBusiness(businesses.get(position));
         // gives me error in yelpResponse.java in binding implementation class for yelpBusiness
 
@@ -79,4 +86,25 @@ public class YelpAdapter extends RecyclerView.Adapter<YelpAdapter.YelpViewHolder
                 .into(bind.restaurantIV);
     }
 
+
+    protected void onBindSetElementsFavorites(@NonNull YelpAdapter.YelpViewHolder holder, int position) {
+        ListItemBinding bind = holder.binding;
+        bind.nameTV.setText(businesses.get(position).name);
+        bind.addressTV.setText(businesses.get(position).location.customAddress);
+        bind.ratingRB.setRating(businesses.get(position).rating);
+        if (!Objects.equals(businesses.get(position).displayPhone, "")) { // if displayPhone is not empty
+            bind.phoneTV.setText(businesses.get(position).displayPhone);
+        } else {
+            bind.phoneTV.setText(R.string.noPhone);
+        }
+        bind.priceTV.setText(businesses.get(position).price);
+        bind.categoryTV.setText(businesses.get(position).customCategory);
+        Glide.with(bind.getRoot().getContext())
+                .load(businesses.get(position).imageUrl)
+                .into(bind.restaurantIV);
+    }
+
+    public void setFavorites(boolean favorites) {
+        isFavorites = favorites;
+    }
 }

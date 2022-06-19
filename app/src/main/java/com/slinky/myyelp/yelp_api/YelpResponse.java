@@ -42,14 +42,17 @@ public class YelpResponse {
         @SerializedName("categories")
         public ArrayList<YelpCategory> categories;
 
+        public String customCategory;
+
           @SuppressLint("Range")
-          public YelpBusiness(Cursor favoriteYelpBusinessesCursor) {
-                name = favoriteYelpBusinessesCursor.getString(favoriteYelpBusinessesCursor.getColumnIndex("name"));
-                location = new YelpLocation(favoriteYelpBusinessesCursor.getString(favoriteYelpBusinessesCursor.getColumnIndex("address")));
-                displayPhone = favoriteYelpBusinessesCursor.getString(favoriteYelpBusinessesCursor.getColumnIndex("phone"));
-                price = favoriteYelpBusinessesCursor.getString(favoriteYelpBusinessesCursor.getColumnIndex("price"));
-                imageUrl = favoriteYelpBusinessesCursor.getString(favoriteYelpBusinessesCursor.getColumnIndex("image_url"));
-                rating = favoriteYelpBusinessesCursor.getFloat(favoriteYelpBusinessesCursor.getColumnIndex("rating"));
+          public YelpBusiness(Cursor favoritesCursor) {
+                name = favoritesCursor.getString(favoritesCursor.getColumnIndex("name"));
+                location = new YelpLocation(favoritesCursor.getString(favoritesCursor.getColumnIndex("address")));
+                displayPhone = favoritesCursor.getString(favoritesCursor.getColumnIndex("phone"));
+                price = favoritesCursor.getString(favoritesCursor.getColumnIndex("price"));
+                rating = favoritesCursor.getFloat(favoritesCursor.getColumnIndex("rating"));
+                customCategory = favoritesCursor.getString(favoritesCursor.getColumnIndex("category"));
+                imageUrl = favoritesCursor.getString(favoritesCursor.getColumnIndex("image_url"));
           }
 
           // translate category names to readable strings by overriding toString() with declarative logic
@@ -65,6 +68,7 @@ public class YelpResponse {
             sb.delete(sb.length() - 2, sb.length());
             return sb.toString();
         }
+
         public static class YelpCategory {
             @SerializedName("title")
             public String title;
@@ -92,7 +96,7 @@ public class YelpResponse {
                 customAddress = address;
             }
 
-            // translate display_address to a single string by overwriting toString()
+            // translate address to a single string by overwriting toString()
             @NonNull
             @Override
             public String toString() {
