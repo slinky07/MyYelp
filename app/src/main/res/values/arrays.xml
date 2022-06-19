@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sortBY">
+        <item>default</item>
+        <item>Rating</item>
+        <item>Price</item>
+    </string-array>
+</resources>

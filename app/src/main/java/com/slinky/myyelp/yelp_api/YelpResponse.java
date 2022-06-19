@@ -34,6 +34,28 @@ public class YelpResponse {
         public String price;
         @SerializedName("location")
         public YelpLocation location;
+        @SerializedName("display_phone")
+        public String displayPhone;
+        @SerializedName("categories")
+        public ArrayList<YelpCategory> categories;
+
+        // translate category names to readable strings by overriding toString() with declarative logic
+
+        @NonNull
+        public String categoryToString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append("• ");
+            for (YelpCategory category : categories) {
+                sb.append(category.title).append(", ");
+            }
+            //delete last comma
+            sb.delete(sb.length() - 2, sb.length());
+            return sb.toString();
+        }
+        public class YelpCategory {
+            @SerializedName("title")
+            public String title;
+        }
 
         public class YelpLocation {
             @SerializedName("address1")
@@ -50,18 +72,23 @@ public class YelpResponse {
             public String State;
             @SerializedName("display_address")
             public ArrayList<String> displayAddress;
+
+            // translate display_address to a single string by overwriting toString()
+            @NonNull
+            @Override
+            public String toString() {
+                return address1 +
+                        ", " +
+                        city +
+                        ", " +
+                        state +
+                        " " +
+                        zipCode +
+                        ", " +
+                        country;
+            }
+
         }
-
-        @SerializedName("categories")
-        public ArrayList<YelpCategory> categories;
-
-        public class YelpCategory {
-            @SerializedName("title")
-            public String title;
-        }
-
-        @SerializedName("display_phone")
-        public String displayPhone;
     }
 
     @NonNull

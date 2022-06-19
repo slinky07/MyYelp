@@ -16,22 +16,22 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/Name_TV"
+                android:id="@+id/name_TV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:layout_marginBottom="5dp"
-                android:text="@{}"
+                android:text="@string/restaurant_name_TV"
                 android:textSize="15sp" />
             <RatingBar
-                android:id="@+id/Rating"
+                android:id="@+id/rating_RB"
                 style="@style/customRatingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="3dp"
                 android:numStars="5"
                 android:layout_marginStart="10dp"
-                android:rating="@{yelp_business.rating}"/>
+                android:rating="0"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -40,47 +40,47 @@
                 android:layout_marginBottom="3dp">
 
             <TextView
-                android:id="@+id/price"
+                android:id="@+id/price_TV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginBottom="5dp"
-                android:text="@{yelp_business.price}"
+                android:text="@string/restaurant_price_TV"
                 android:textStyle="bold"
                 android:textSize="14sp" />
             <TextView
-                android:id="@+id/category"
+                android:id="@+id/category_TV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginBottom="5dp"
-                android:text="@{yelp_business.categories.toString()}"
+                android:text="@string/restaurant_category_TV"
                 android:textSize="14sp" />
 
             </LinearLayout>
 
             <TextView
-                android:id="@+id/phone"
+                android:id="@+id/phone_TV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:textStyle="bold"
                 android:layout_marginBottom="5dp"
-                android:text="@{yelp_business.displayPhone}"
+                android:text="@string/restaurant_phone_TV"
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/address"
+                android:id="@+id/address_TV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="@{yelp_location.displayAddress.toString()}"
+                android:text="@string/restaurant_address_TV"
                 android:textSize="14sp" />
 
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/restaurant_IMG"
+            android:id="@+id/restaurant_IV"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="2"
@@ -90,13 +90,10 @@
             android:contentDescription="@string/image_from_api_for_glide" />
     </LinearLayout>
 
-<data>
-    <variable
-        name="yelp_business"
-        type="com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness" />
-    <variable
-        name="yelp_location"
-        type="com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness.YelpLocation" />
-</data>
+<!--<data>-->
+<!--    <variable-->
+<!--        name="yelp_business"-->
+<!--        type="com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness" />-->
+<!--</data>-->
 
 </layout>

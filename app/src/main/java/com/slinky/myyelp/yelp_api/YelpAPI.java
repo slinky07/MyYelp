@@ -9,6 +9,11 @@ public interface YelpAPI {
     @GET("businesses/search")
     Call<YelpResponse> getBusinesses(@Query("term") String term,
                                      @Query("location") String location);
+
+    @GET("businesses/search")
+    Call<YelpResponse> getBusinesses(@Query("term") String term,
+                                     @Query("location") String location,
+                                     @Query("sort_by") String sortBy);
     /*
     @GET("businesses/search")
     Call<YelpResponse> getBusinesses(@Query("term") String term,

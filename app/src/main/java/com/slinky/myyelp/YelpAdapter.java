@@ -1,5 +1,6 @@
 package com.slinky.myyelp;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -14,11 +15,14 @@ import com.slinky.myyelp.databinding.ListItemBinding;
 import com.slinky.myyelp.yelp_api.YelpResponse;
 
 import java.util.List;
-//TODO implement it like they did in the repo
+import java.util.Objects;
+
 public class YelpAdapter extends RecyclerView.Adapter<YelpAdapter.YelpViewHolder> {
     private List<YelpResponse.YelpBusiness> businesses;
+    YelpRepo yelpRepo;
 
-    public YelpAdapter() {
+    public YelpAdapter(Context context) {
+        yelpRepo = YelpRepo.getInstance(context);
     }
    public void setBusinessesList(List<YelpResponse.YelpBusiness> businesses) {
         this.businesses = businesses;
@@ -41,16 +45,12 @@ public class YelpAdapter extends RecyclerView.Adapter<YelpAdapter.YelpViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull YelpAdapter.YelpViewHolder holder, int position) {
-        holder.binding.setYelpBusiness(businesses.get(position));
-        holder.binding.setYelpLocation(businesses.get(position).location);
-        // set image from imageUrl with Glide
-        Glide.with(holder.binding.getRoot().getContext())
-                .load(businesses.get(position).imageUrl)
-                .into(holder.binding.restaurantIMG);
+        onBindSetElements(holder, position);
+        //        holder.binding.setYelpBusiness(businesses.get(position));
+        // gives me error in yelpResponse.java in binding implementation class for yelpBusiness
 
         holder.binding.getRoot().setOnClickListener(v -> {
-            // TODO implement SQLite database to save the object into favorite list
-            Toast.makeText(v.getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+            yelpRepo.test(businesses.get(position).name);
         });
     }
 
@@ -61,6 +61,23 @@ public class YelpAdapter extends RecyclerView.Adapter<YelpAdapter.YelpViewHolder
             super(binding.getRoot());
             this.binding = binding;
         }
+    }
+
+    protected void onBindSetElements(@NonNull YelpAdapter.YelpViewHolder holder, int position) {
+        ListItemBinding bind = holder.binding;
+        bind.addressTV.setText(businesses.get(position).location.toString());
+        bind.nameTV.setText(businesses.get(position).name);
+        bind.ratingRB.setRating(businesses.get(position).rating);
+        if (!Objects.equals(businesses.get(position).displayPhone, "")) {
+            bind.phoneTV.setText(businesses.get(position).displayPhone);
+        } else {
+            bind.phoneTV.setText(R.string.noPhone);
+        }
+        bind.priceTV.setText(businesses.get(position).price);
+        bind.categoryTV.setText(businesses.get(position).categoryToString());
+        Glide.with(bind.getRoot().getContext())
+                .load(businesses.get(position).imageUrl)
+                .into(bind.restaurantIV);
     }
 
 }
