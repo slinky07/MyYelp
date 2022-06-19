@@ -1,5 +1,8 @@
 package com.slinky.myyelp.yelp_api;
 
+import android.annotation.SuppressLint;
+import android.database.Cursor;
+
 import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
@@ -18,7 +21,7 @@ public class YelpResponse {
     @SerializedName("total") // at bottom of JSON response
     public int total;
 
-      public class YelpBusiness {
+      public static class YelpBusiness {
 
         @SerializedName("id")
         public String id;
@@ -39,7 +42,17 @@ public class YelpResponse {
         @SerializedName("categories")
         public ArrayList<YelpCategory> categories;
 
-        // translate category names to readable strings by overriding toString() with declarative logic
+          @SuppressLint("Range")
+          public YelpBusiness(Cursor favoriteYelpBusinessesCursor) {
+                name = favoriteYelpBusinessesCursor.getString(favoriteYelpBusinessesCursor.getColumnIndex("name"));
+                location = new YelpLocation(favoriteYelpBusinessesCursor.getString(favoriteYelpBusinessesCursor.getColumnIndex("address")));
+                displayPhone = favoriteYelpBusinessesCursor.getString(favoriteYelpBusinessesCursor.getColumnIndex("phone"));
+                price = favoriteYelpBusinessesCursor.getString(favoriteYelpBusinessesCursor.getColumnIndex("price"));
+                imageUrl = favoriteYelpBusinessesCursor.getString(favoriteYelpBusinessesCursor.getColumnIndex("image_url"));
+                rating = favoriteYelpBusinessesCursor.getFloat(favoriteYelpBusinessesCursor.getColumnIndex("rating"));
+          }
+
+          // translate category names to readable strings by overriding toString() with declarative logic
 
         @NonNull
         public String categoryToString() {
@@ -52,12 +65,12 @@ public class YelpResponse {
             sb.delete(sb.length() - 2, sb.length());
             return sb.toString();
         }
-        public class YelpCategory {
+        public static class YelpCategory {
             @SerializedName("title")
             public String title;
         }
 
-        public class YelpLocation {
+        public static class YelpLocation {
             @SerializedName("address1")
             public String address1;
             @SerializedName("city")
@@ -72,6 +85,12 @@ public class YelpResponse {
             public String State;
             @SerializedName("display_address")
             public ArrayList<String> displayAddress;
+
+            public String customAddress;
+
+            public YelpLocation(String address) {
+                customAddress = address;
+            }
 
             // translate display_address to a single string by overwriting toString()
             @NonNull

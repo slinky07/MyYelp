@@ -1,16 +1,20 @@
 package com.slinky.myyelp;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.database.Cursor;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import com.slinky.myyelp.database.LocalYelpDatabase;
 import com.slinky.myyelp.yelp_api.YelpAPI;
 import com.slinky.myyelp.yelp_api.YelpClient;
 import com.slinky.myyelp.yelp_api.YelpResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -21,9 +25,11 @@ public class YelpRepo {
     private final String TAG = getClass().getSimpleName();
     private static YelpRepo instance;
     private final Context context;
+    LocalYelpDatabase database;
 
     private YelpRepo(Context context) {
         this.context = context;
+        this.database = LocalYelpDatabase.getInstance(context);
     }
     // make this class singleton
     public static YelpRepo getInstance(Context context) {
@@ -87,12 +93,37 @@ public class YelpRepo {
        return yelpResponseLiveData;
     }
 
-    public void test(String businessName) {
-        Toast.makeText(context, "Clicked: " + businessName, Toast.LENGTH_SHORT).show();
-        //TODO implement database saving call here
+    public void insertFavoriteIntoDatabase(YelpResponse.YelpBusiness yelpBusiness) {
+        Log.d(TAG, "test: " + yelpBusiness.name);
+        // insert this yelp business into database from LocalYelpDatabase
+        database.insert(yelpBusiness);
     }
     // save the list in the cache
     public void saveLastQuery(String query) {
+        //TODO implement caching call here ... someday
+    }
 
+    public List<YelpResponse.YelpBusiness> getFavoriteFromDatabase() {
+        // create a new array list to store the favorite yelp businesses
+        Cursor favoriteYelpBusinessesCursor = database.getAll();
+        List<YelpResponse.YelpBusiness> favoriteYelpBusinesses = new ArrayList<>();
+        while (favoriteYelpBusinessesCursor.moveToNext()) {
+            favoriteYelpBusinesses.add(new YelpResponse.YelpBusiness(favoriteYelpBusinessesCursor));
+        }
+        return favoriteYelpBusinesses;
+    }
+
+    // create an alert to ask the user if they want to insert this yelp business into the database
+    public void askUserIfAddToDatabase(YelpResponse.YelpBusiness yelpBusiness) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Add to favorites?");
+        builder.setMessage(yelpBusiness.name);
+        builder.setPositiveButton("Yes", (dialog, which) -> {
+            insertFavoriteIntoDatabase(yelpBusiness);
+        });
+        builder.setNegativeButton("No", (dialog, which) -> {
+            dialog.dismiss();
+        });
+        builder.show();
     }
 }

@@ -10,5 +10,8 @@
     <string name="restaurant_price_TV">$$</string>
     <string name="sort_by">Sort by</string>
     <string name="noPhone">No phone number available</string>
+    <string name="search">Search</string>
+    <string name="favourite">Favorite</string>
+    <string name="header_title_yelp">Francis\'s Yelp</string>
 
 </resources>

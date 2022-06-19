@@ -2,11 +2,14 @@ package com.slinky.myyelp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -16,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.google.android.material.navigation.NavigationView;
 import com.slinky.myyelp.databinding.ActivityMainBinding;
 import com.slinky.myyelp.yelp_api.YelpClient;
 
@@ -34,16 +38,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        Log.d(TAG, "onCreate: ");
 
         initUI();
         spinner();
         defaultQuery();
+        setNavigationDrawer();
   }
 
     private void initUI() {
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         yelpAdapter = new YelpAdapter(this);
         binding.recyclerView.setAdapter(yelpAdapter);
+
     }
 
   public boolean onCreateOptionsMenu(Menu menu) {
@@ -168,5 +175,34 @@ public class MainActivity extends AppCompatActivity {
         yelpViewModel.sortByRating();
     }
 
+    /**
+     * this method would be to save querry into cache.
+     * unfortunately, I don't know how to do that.
+     * @param query the query to save
+     */
+    private void saveQuery(String query) {
+        yelpViewModel.saveLastQuery(query);
+    }
+
+    // implement listener for drawer
+    @SuppressLint("NonConstantResourceId")
+    private void setNavigationDrawer() {
+        binding.navView.setNavigationItemSelectedListener(menuItem -> {
+            switch (menuItem.getItemId()) {
+                case R.id.drawer_search:
+                    Log.d(TAG, "onNavigationItemSelected: search");
+                    //close drawer
+                    binding.drawerLayoutMain.closeDrawer(GravityCompat.START);
+                    break;
+                case R.id.drawer_favorite:
+                    Log.d(TAG, "onNavigationItemSelected: favorite");
+                    //launch favorite activity
+                    Intent intent = new Intent(MainActivity.this, FavoriteActivity.class);
+                    startActivity(intent);
+                    break;
+            }
+            return true;
+        });
+}
 }
 

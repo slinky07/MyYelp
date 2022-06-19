@@ -3,7 +3,6 @@ package com.slinky.myyelp;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -50,7 +49,7 @@ public class YelpAdapter extends RecyclerView.Adapter<YelpAdapter.YelpViewHolder
         // gives me error in yelpResponse.java in binding implementation class for yelpBusiness
 
         holder.binding.getRoot().setOnClickListener(v -> {
-            yelpRepo.test(businesses.get(position).name);
+            yelpRepo.askUserIfAddToDatabase(businesses.get(position));
         });
     }
 
@@ -68,7 +67,7 @@ public class YelpAdapter extends RecyclerView.Adapter<YelpAdapter.YelpViewHolder
         bind.addressTV.setText(businesses.get(position).location.toString());
         bind.nameTV.setText(businesses.get(position).name);
         bind.ratingRB.setRating(businesses.get(position).rating);
-        if (!Objects.equals(businesses.get(position).displayPhone, "")) {
+        if (!Objects.equals(businesses.get(position).displayPhone, "")) { // if displayPhone is not empty
             bind.phoneTV.setText(businesses.get(position).displayPhone);
         } else {
             bind.phoneTV.setText(R.string.noPhone);
