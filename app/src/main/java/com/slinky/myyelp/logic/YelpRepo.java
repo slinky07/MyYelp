@@ -46,8 +46,8 @@ public class YelpRepo {
 
     /**
      * Get the list of businesses from the API
-     * @param query
-     * @return
+     * @param query the query to search for
+     * @return the list of businesses
      */
     public MutableLiveData<List<YelpResponse.YelpBusiness>> getYelpResponse(String query) {
        final  MutableLiveData<List<YelpResponse.YelpBusiness>> yelpResponseLiveData = new MutableLiveData<>();
@@ -66,7 +66,7 @@ public class YelpRepo {
            }
 
            @Override
-           public void onFailure(Call<YelpResponse> call, Throwable t) {
+           public void onFailure(@NonNull Call<YelpResponse> call, @NonNull Throwable t) {
                Log.d(TAG, "Error: " + t.getMessage());
            }
        });
@@ -140,12 +140,10 @@ public class YelpRepo {
                 adapter.notifyItemRemoved(position);
                 //TODO fix this: when an item is added, and then i remove any item, the adapter keeps
                 // adding the added item, but only in this instance. if i go out to search then come
-                // back to favs, the doubles are not there
+                // back to faves, the doubles are not there
             }
         });
-        builder.setNegativeButton("No", (dialog, which) -> {
-            dialog.dismiss();
-        });
+        builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
         return builder;
     }
 

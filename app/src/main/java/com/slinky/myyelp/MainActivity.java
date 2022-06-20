@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
      * @param query search query
      */
     private void requestYelpResponse(String query) {
-        if (!query.equalsIgnoreCase("poutine")) {
+        if (!query.equalsIgnoreCase(defaultQuery)) {
             isDefault = false;
         }
         lastQuery = query;
@@ -107,10 +107,9 @@ public class MainActivity extends AppCompatActivity {
      * default query for the yelp api
      */
     private void defaultQuery() {
-        //get random string from defaultFoods array
-        String query = getDefaultQuery();
-        requestYelpResponse(query);
-        Log.d(TAG, "defaultQuery: " + query);
+        defaultQuery = getDefaultQuery();
+        Log.d(TAG, "defaultQuery: " + defaultQuery);
+        requestYelpResponse(defaultQuery);
         isDefault = true;
     }
 
@@ -137,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
                 switch (query.toLowerCase()) {
                     case "rating":
                         Log.d(TAG, "onItemSelected: rating");
-//                        requestYelpResponse(lastQuery, "rating");
                         sortByRating();
                         break;
                     case "price":
@@ -171,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("NonConstantResourceId")
     private void setNavigationDrawer() {
         binding.navView.setNavigationItemSelectedListener(menuItem -> {
+
             switch (menuItem.getItemId()) {
                 case R.id.drawer_search:
                     Log.d(TAG, "onNavigationItemSelected: search");
@@ -180,12 +179,16 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.drawer_favorite:
                     Log.d(TAG, "onNavigationItemSelected: favorite");
                     //launch favorite activity
-                    Intent intent = new Intent(MainActivity.this, FavoriteActivity.class);
-                    startActivity(intent);
+                    startFavoriteActivity();
                     break;
             }
             return true;
         });
+    }
+
+    private void startFavoriteActivity() {
+        Intent intent = new Intent(MainActivity.this, FavoriteActivity.class);
+        startActivity(intent);
     }
 
     @Override
