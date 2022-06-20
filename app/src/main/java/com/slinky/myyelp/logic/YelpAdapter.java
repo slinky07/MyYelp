@@ -2,17 +2,22 @@ package com.slinky.myyelp.logic;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.slinky.myyelp.R;
 import com.slinky.myyelp.database.DatabaseLogic;
 import com.slinky.myyelp.database.Delete;
@@ -153,6 +158,19 @@ public class YelpAdapter extends RecyclerView.Adapter<YelpAdapter.YelpViewHolder
         bind.priceTV.setText(businesses.get(position).price);
         Glide.with(holder.itemView)
                 .load(businesses.get(position).imageUrl)
+                .addListener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        Log.d(TAG, "onLoadFailed: " + e.getMessage());
+                        bind.restaurantIV.setImageResource(R.drawable.default_yelp);
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                })
                 .into(bind.restaurantIV);
     }
 
