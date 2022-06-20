@@ -20,18 +20,11 @@ public class YelpClient {
     public YelpAPI build() {
 
         OkHttpClient httpClient = new OkHttpClient.Builder()
-                .addInterceptor(new Interceptor() {
-                    @NonNull
-                    @Override
-                    public Response intercept(@NonNull Chain chain) throws IOException {
-
-                        return chain.proceed(chain
-                                .request()
-                                .newBuilder()
-                                .addHeader("Authorization", KEY)
-                                .build());
-                    }
-                }).build();
+                .addInterceptor(chain -> chain.proceed(chain
+                        .request()
+                        .newBuilder()
+                        .addHeader("Authorization", KEY)
+                        .build())).build();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.yelp.com/v3/")
                 .addConverterFactory(GsonConverterFactory.create())

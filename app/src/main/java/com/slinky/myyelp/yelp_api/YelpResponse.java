@@ -47,11 +47,11 @@ public class YelpResponse {
 
         public String customCategory; // custom category for this business for favorites
 
-        public boolean isFavorite = false; // is this business a favorite?
+        public boolean isFavorite; // is this business a favorite?
 
         /**
          * constructor for YelpBusiness class. only called when creating a new favourite
-         * @param favoritesCursor
+         * @param favoritesCursor cursor that contains the favorite data
          */
           @SuppressLint("Range")
           public YelpBusiness(Cursor favoritesCursor) {
@@ -112,7 +112,7 @@ public class YelpResponse {
 
             /**
              * constructor for YelpLocation class. only called when creating a new favourite
-             * @param address
+             * @param address address of business
              */
             public YelpLocation(String address) {
                 customAddress = address;
@@ -120,7 +120,7 @@ public class YelpResponse {
 
             /**
              * translate address to readable strings by overriding toString() with declarative logic
-              * @return
+              * @return String representation of address
              */
             @NonNull
             @Override

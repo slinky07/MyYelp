@@ -1,13 +1,9 @@
 package com.slinky.myyelp.database;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-
-import com.slinky.myyelp.yelp_api.YelpResponse;
 
 public class LocalYelpDatabase extends SQLiteOpenHelper {
 

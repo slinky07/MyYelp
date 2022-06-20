@@ -61,7 +61,7 @@ public class FavoriteActivity extends AppCompatActivity {
 
     private void showFavouriteList() {
         YelpRepo repo = YelpRepo.getInstance(this);
-        List<YelpResponse.YelpBusiness> favouriteList = null;
+        List<YelpResponse.YelpBusiness> favouriteList;
 
         if (repo.getFavoriteFromDatabase().size() > 0) {
             favouriteList = repo.getFavoriteFromDatabase();

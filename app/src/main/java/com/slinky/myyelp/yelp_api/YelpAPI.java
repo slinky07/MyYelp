@@ -7,9 +7,9 @@ import retrofit2.http.Query;
 public interface YelpAPI {
     /**
      * standard call method
-     * @param term
-     * @param location
-     * @return
+     * @param term search term
+     * @param location      location to search
+     * @return           call object
      */
     @GET("businesses/search")
     Call<YelpResponse> getBusinesses(@Query("term") String term,

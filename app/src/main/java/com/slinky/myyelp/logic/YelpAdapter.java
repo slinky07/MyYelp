@@ -158,7 +158,7 @@ public class YelpAdapter extends RecyclerView.Adapter<YelpAdapter.YelpViewHolder
         bind.priceTV.setText(businesses.get(position).price);
         Glide.with(holder.itemView)
                 .load(businesses.get(position).imageUrl)
-                .addListener(new RequestListener<Drawable>() {
+                .addListener(new RequestListener<>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         Log.d(TAG, "onLoadFailed: " + e.getMessage());
