@@ -1,8 +1,12 @@
-package com.slinky.myyelp;
+package com.slinky.myyelp.logic;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -10,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.bumptech.glide.Glide;
+import com.slinky.myyelp.R;
 import com.slinky.myyelp.databinding.ListItemBinding;
 import com.slinky.myyelp.yelp_api.YelpResponse;
 
@@ -17,10 +22,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class YelpAdapter extends RecyclerView.Adapter<YelpAdapter.YelpViewHolder> {
+    private static final String TAG = YelpAdapter.class.getSimpleName();
     private List<YelpResponse.YelpBusiness> businesses;
     private boolean isFavorites;
-
-
     YelpRepo yelpRepo;
 
     public YelpAdapter(Context context) {
@@ -38,7 +42,6 @@ public class YelpAdapter extends RecyclerView.Adapter<YelpAdapter.YelpViewHolder
     @NonNull
     @Override
     public YelpAdapter.YelpViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // implement view holder here to bind data to the view
         ListItemBinding binding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.getContext()),
                 R.layout.list_item, parent, false);
@@ -52,14 +55,28 @@ public class YelpAdapter extends RecyclerView.Adapter<YelpAdapter.YelpViewHolder
         } else {
             onBindSetElementsFavorites(holder, position);
         }
-        //        holder.binding.setYelpBusiness(businesses.get(position));
-        // gives me error in yelpResponse.java in binding implementation class for yelpBusiness
+        holder.binding.getRoot().setOnClickListener(v -> listenerLogic(v, holder, position));
+    }
+    /**
+     * listenerLogic
+     */
+    private void listenerLogic(View v, YelpAdapter.YelpViewHolder holder, int position ) {
+        Log.d(TAG, "onBindViewHolder: clicked on: " + businesses.get(0).name);
+        yelpRepo.setContext(holder.binding.getRoot().getContext()); // to solve the context problem
 
-        holder.binding.getRoot().setOnClickListener(v -> {
-            yelpRepo.askUserIfAddToDatabase(businesses.get(position));
-        });
+        AlertDialog.Builder builder; // to solve the context problem
+        builder = yelpRepo.askUserIfAddToDatabase(businesses.get(position));
+
+        if (!businesses.get(position).isFavorite) {
+            builder.show();
+        } else {
+            Toast.makeText(holder.binding.getRoot().getContext(), "Already in favorites", Toast.LENGTH_SHORT).show();
+        }
     }
 
+    /**
+     * class to bind the data to the view
+     */
     static class YelpViewHolder extends RecyclerView.ViewHolder {
         private final ListItemBinding binding;
 
@@ -67,44 +84,57 @@ public class YelpAdapter extends RecyclerView.Adapter<YelpAdapter.YelpViewHolder
             super(binding.getRoot());
             this.binding = binding;
         }
+
     }
 
+    /**
+     * This method is used to set the elements of the view holder
+     * @param holder the view holder
+     * @param position the position of the element in the list
+     */
     protected void onBindSetElements(@NonNull YelpAdapter.YelpViewHolder holder, int position) {
         ListItemBinding bind = holder.binding;
         bind.addressTV.setText(businesses.get(position).location.toString());
-        bind.nameTV.setText(businesses.get(position).name);
-        bind.ratingRB.setRating(businesses.get(position).rating);
-        if (!Objects.equals(businesses.get(position).displayPhone, "")) { // if displayPhone is not empty
-            bind.phoneTV.setText(businesses.get(position).displayPhone);
-        } else {
-            bind.phoneTV.setText(R.string.noPhone);
-        }
-        bind.priceTV.setText(businesses.get(position).price);
         bind.categoryTV.setText(businesses.get(position).categoryToString());
-        Glide.with(bind.getRoot().getContext())
-                .load(businesses.get(position).imageUrl)
-                .into(bind.restaurantIV);
+        onBindSetCombinedLogic(holder, position);
     }
 
-
+    /**
+     * This method is used to set the favorite logic for the list items
+     * needed to set custom logic for the favorites list.
+     * @param holder the view holder
+     * @param position the position of the element in the list
+     */
     protected void onBindSetElementsFavorites(@NonNull YelpAdapter.YelpViewHolder holder, int position) {
         ListItemBinding bind = holder.binding;
-        bind.nameTV.setText(businesses.get(position).name);
         bind.addressTV.setText(businesses.get(position).location.customAddress);
+        bind.categoryTV.setText(businesses.get(position).customCategory);
+        onBindSetCombinedLogic(holder, position);
+    }
+
+    /**
+     * This method is used to set the favorite logic for the recycler view
+     * @param holder the view holder
+     * @param position the position of the element in the list
+     */
+    public void onBindSetCombinedLogic(@NonNull YelpAdapter.YelpViewHolder holder, int position) {
+        ListItemBinding bind = holder.binding;
+        bind.nameTV.setText(businesses.get(position).name);
         bind.ratingRB.setRating(businesses.get(position).rating);
+
         if (!Objects.equals(businesses.get(position).displayPhone, "")) { // if displayPhone is not empty
             bind.phoneTV.setText(businesses.get(position).displayPhone);
         } else {
             bind.phoneTV.setText(R.string.noPhone);
         }
+
         bind.priceTV.setText(businesses.get(position).price);
-        bind.categoryTV.setText(businesses.get(position).customCategory);
-        Glide.with(bind.getRoot().getContext())
+        Glide.with(holder.itemView)
                 .load(businesses.get(position).imageUrl)
                 .into(bind.restaurantIV);
     }
 
-    public void setFavorites(boolean favorites) {
+    public void setIsFavorites(boolean favorites) {
         isFavorites = favorites;
     }
 }

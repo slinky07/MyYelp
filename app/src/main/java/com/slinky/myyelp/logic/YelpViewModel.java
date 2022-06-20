@@ -1,9 +1,8 @@
-package com.slinky.myyelp;
+package com.slinky.myyelp.logic;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
-import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -13,7 +12,6 @@ import androidx.lifecycle.ViewModel;
 
 import com.slinky.myyelp.yelp_api.YelpResponse;
 
-import java.util.Comparator;
 import java.util.List;
 
 public class YelpViewModel extends ViewModel {
@@ -21,7 +19,7 @@ public class YelpViewModel extends ViewModel {
     private YelpRepo yelpRepo;
     @SuppressLint("StaticFieldLeak")
     private Context context;
-    private MutableLiveData<List<YelpResponse.YelpBusiness>> yelpResponseLiveData;
+    private MutableLiveData<List<YelpResponse.YelpBusiness>> yelpResponseLiveData; // live data to hold the yelp response
 
     public YelpViewModel(Context context) {
         yelpRepo = YelpRepo.getInstance(context);
@@ -34,10 +32,6 @@ public class YelpViewModel extends ViewModel {
         }
         return yelpResponseLiveData;
     }
-
-    // return list
-
-    // notify this method is osbeleted
 
     /**
      * @deprecated  this method is obsolete for the assignment's purpose
@@ -62,24 +56,24 @@ public class YelpViewModel extends ViewModel {
             Toast.makeText(context, "Api level under required level", Toast.LENGTH_LONG).show();
         }
     }
-    // sort by price logic where some values are null. put null values at the start of the list.
+
+    /**
+     * sort by price logic where some values are null. put null values at the start of the list.
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void sortByPriceLogic() {
         if (yelpResponseLiveData != null) {
             List<YelpResponse.YelpBusiness> yelpBusinessList = yelpResponseLiveData.getValue();
             if (yelpBusinessList != null) {
-                yelpBusinessList.sort(new Comparator<YelpResponse.YelpBusiness>() {
-                    @Override
-                    public int compare(YelpResponse.YelpBusiness o1, YelpResponse.YelpBusiness o2) {
-                        if (o1.price == null && o2.price == null) {
-                            return 0;
-                        } else if (o1.price == null) {
-                            return -1;
-                        } else if (o2.price == null) {
-                            return 1;
-                        } else {
-                            return o1.price.compareTo(o2.price);
-                        }
+                yelpBusinessList.sort((o1, o2) -> {
+                    if (o1.price == null && o2.price == null) {
+                        return 0;
+                    } else if (o1.price == null) {
+                        return -1;
+                    } else if (o2.price == null) {
+                        return 1;
+                    } else {
+                        return o1.price.compareTo(o2.price);
                     }
                 });
                 yelpResponseLiveData.setValue(yelpBusinessList);
@@ -95,31 +89,11 @@ public class YelpViewModel extends ViewModel {
             Toast.makeText(context, "Api level under required level", Toast.LENGTH_LONG).show();
         }
     }
-    // sort list by float rating high to low  where some values are null. put null values at the start of the list.
+
+    /**
+     * sort list by float rating high to low  where some values are null. put null values at the start of the list.
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
- /*   private void sortByRatingLogic() {
-        if (yelpResponseLiveData != null) {
-            List<YelpResponse.YelpBusiness> yelpBusinessList = yelpResponseLiveData.getValue();
-            if (yelpBusinessList != null) {
-                yelpBusinessList.sort(new Comparator<YelpResponse.YelpBusiness>() {
-                    @Override
-                    public int compare(YelpResponse.YelpBusiness o1, YelpResponse.YelpBusiness o2) {
-                        if (o1.rating == null && o2.rating == null) {
-                            return 0;
-                        } else if (o1.rating == null) {
-                            return -1;
-                        } else if (o2.rating == null) {
-                            return 1;
-                        } else {
-                            return Float.compare(o2.rating, o1.rating);
-                        }
-                    }
-                });
-                yelpResponseLiveData.setValue(yelpBusinessList);
-            }
-        }
-    }
-*/
      private void sortByRatingLogic() {
         List<YelpResponse.YelpBusiness> yelpBusinessList = yelpResponseLiveData.getValue();
         if (yelpBusinessList != null) {
@@ -136,15 +110,18 @@ public class YelpViewModel extends ViewModel {
         }
     }
 
-    private String getStr(float f) {
-        return f + "";
+    /***
+     * get business of the list from the position
+     * @param position the position of the list
+     * @return  the business at the position
+     */
+    private YelpResponse.YelpBusiness getYelpBusiness(int position) {
+        if (yelpResponseLiveData != null) {
+            List<YelpResponse.YelpBusiness> yelpBusinessList = yelpResponseLiveData.getValue();
+            if (yelpBusinessList != null) {
+                return yelpBusinessList.get(position);
+            }
+        }
+        return null;
     }
-
-    public void saveLastQuery(String query) {
-        yelpRepo.saveLastQuery(query);
-    }
-
-
-
-
 }

@@ -21,7 +21,10 @@ public class YelpResponse {
     @SerializedName("total") // at bottom of JSON response
     public int total;
 
-      public static class YelpBusiness {
+    /**
+     * YelpBusiness is a class that represents a single business returned from the Yelp API.
+     */
+    public static class YelpBusiness {
 
         @SerializedName("id")
         public String id;
@@ -42,10 +45,18 @@ public class YelpResponse {
         @SerializedName("categories")
         public ArrayList<YelpCategory> categories;
 
-        public String customCategory;
+        public String customCategory; // custom category for this business for favorites
 
+        public boolean isFavorite = false; // is this business a favorite?
+
+        /**
+         * constructor for YelpBusiness class. only called when creating a new favourite
+         * @param favoritesCursor
+         */
           @SuppressLint("Range")
           public YelpBusiness(Cursor favoritesCursor) {
+                isFavorite = true;
+
                 name = favoritesCursor.getString(favoritesCursor.getColumnIndex("name"));
                 location = new YelpLocation(favoritesCursor.getString(favoritesCursor.getColumnIndex("address")));
                 displayPhone = favoritesCursor.getString(favoritesCursor.getColumnIndex("phone"));
@@ -55,8 +66,10 @@ public class YelpResponse {
                 imageUrl = favoritesCursor.getString(favoritesCursor.getColumnIndex("image_url"));
           }
 
-          // translate category names to readable strings by overriding toString() with declarative logic
-
+        /**
+         * translate category names to readable strings by overriding toString() with declarative logic
+         * @return String representation of category
+         */
         @NonNull
         public String categoryToString() {
             StringBuilder sb = new StringBuilder();
@@ -64,16 +77,21 @@ public class YelpResponse {
             for (YelpCategory category : categories) {
                 sb.append(category.title).append(", ");
             }
-            //delete last comma
             sb.delete(sb.length() - 2, sb.length());
             return sb.toString();
         }
 
+        /**
+         * yelp categories obj
+         */
         public static class YelpCategory {
             @SerializedName("title")
             public String title;
         }
 
+        /**
+         * yelp location obj
+         */
         public static class YelpLocation {
             @SerializedName("address1")
             public String address1;
@@ -90,13 +108,20 @@ public class YelpResponse {
             @SerializedName("display_address")
             public ArrayList<String> displayAddress;
 
-            public String customAddress;
+            public String customAddress; // custom address for this business for favorites
 
+            /**
+             * constructor for YelpLocation class. only called when creating a new favourite
+             * @param address
+             */
             public YelpLocation(String address) {
                 customAddress = address;
             }
 
-            // translate address to a single string by overwriting toString()
+            /**
+             * translate address to readable strings by overriding toString() with declarative logic
+              * @return
+             */
             @NonNull
             @Override
             public String toString() {
@@ -114,6 +139,10 @@ public class YelpResponse {
         }
     }
 
+    /**
+     * used for testing only
+     * @return String representation of YelpResponse
+     */
     @NonNull
     @Override
     public String toString() {

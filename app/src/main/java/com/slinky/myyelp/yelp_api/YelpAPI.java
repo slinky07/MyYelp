@@ -5,7 +5,12 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface YelpAPI {
-
+    /**
+     * standard call method
+     * @param term
+     * @param location
+     * @return
+     */
     @GET("businesses/search")
     Call<YelpResponse> getBusinesses(@Query("term") String term,
                                      @Query("location") String location);

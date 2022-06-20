@@ -7,14 +7,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
-import com.slinky.myyelp.database.LocalYelpDatabase;
 import com.slinky.myyelp.databinding.ActivityFavoriteBinding;
+import com.slinky.myyelp.logic.YelpAdapter;
+import com.slinky.myyelp.logic.YelpRepo;
 import com.slinky.myyelp.yelp_api.YelpResponse;
 
 import java.util.List;
@@ -23,29 +22,29 @@ public class FavoriteActivity extends AppCompatActivity {
     private final String TAG = getClass().getSimpleName();
     private ActivityFavoriteBinding binding;
     private YelpAdapter yelpAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_favorite);        //hide the action bar
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_favorite);
         Log.d(TAG, "onCreate: ");
+
         getSupportActionBar().hide();
         initUI();
         setNavigationDrawer();
         showFavouriteList();
-        setGlobalRVListener();
     }
+
     @SuppressLint("NonConstantResourceId")
     private void setNavigationDrawer() {
         binding.navView.setNavigationItemSelectedListener(menuItem -> {
             switch (menuItem.getItemId()) {
                 case R.id.drawer_search:
                     Log.d(TAG, "onNavigationItemSelected: search");
-                    Intent searchIntent = new Intent(FavoriteActivity.this, MainActivity.class);
-                    startActivity(searchIntent);
+                    sendToMain();
                     break;
                 case R.id.drawer_favorite:
                     Log.d(TAG, "onNavigationItemSelected: favorite");
-                    //close drawer
                     binding.drawerLayoutFavorite.closeDrawer(GravityCompat.START);
                     break;
             }
@@ -53,30 +52,28 @@ public class FavoriteActivity extends AppCompatActivity {
         });
     }
 
-    //create method to show the favourite list from yelpRepository
+    private void sendToMain() {
+        Intent mainIntent = new Intent(FavoriteActivity.this, MainActivity.class);
+        mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(mainIntent);
+        finish();
+    }
+
     private void showFavouriteList() {
         YelpRepo repo = YelpRepo.getInstance(this);
-        //check ig there is any favourite
         List<YelpResponse.YelpBusiness> favouriteList = null;
+
         if (repo.getFavoriteFromDatabase().size() > 0) {
             favouriteList = repo.getFavoriteFromDatabase();
             Log.d(TAG, "showFavouriteList: " + favouriteList.size());
-            //set recycle view layout manager
+
             setAdapterBool(true);
             yelpAdapter.setBusinessesList(favouriteList);
+
         } else {
             Toast.makeText(this, "No favourite yet", Toast.LENGTH_SHORT).show();
         }
     }
-    //set onGlobalLayoutListener to set isFavorite to false after the recycler view is created
-    private void setGlobalRVListener() {
-        binding.recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-            Log.d(TAG, "setGlobalRVListener: ");
-            yelpAdapter.setFavorites(false);
-//            binding.recyclerView.getViewTreeObserver().removeOnGlobalLayoutListener((ViewTreeObserver.OnGlobalLayoutListener) this);
-        });
-    }
-
 
     private void initUI() {
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -85,7 +82,13 @@ public class FavoriteActivity extends AppCompatActivity {
     }
 
     private void setAdapterBool(boolean bool) {
-        yelpAdapter.setFavorites(bool);
+        yelpAdapter.setIsFavorites(bool);
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        Log.d(TAG, "finish: set to false " );
+        setAdapterBool(false); // set to false to avoid memory leak
+    }
 }

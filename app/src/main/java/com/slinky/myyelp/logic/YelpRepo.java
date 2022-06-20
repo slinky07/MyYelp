@@ -1,4 +1,4 @@
-package com.slinky.myyelp;
+package com.slinky.myyelp.logic;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -24,14 +24,14 @@ import retrofit2.Response;
 public class YelpRepo {
     private final String TAG = getClass().getSimpleName();
     private static YelpRepo instance;
-    private final Context context;
+    private Context context;
     LocalYelpDatabase database;
 
     private YelpRepo(Context context) {
         this.context = context;
         this.database = LocalYelpDatabase.getInstance(context);
     }
-    // make this class singleton
+    // singleton
     public static YelpRepo getInstance(Context context) {
         if (instance == null) {
             instance = new YelpRepo(context);
@@ -39,6 +39,15 @@ public class YelpRepo {
         return instance;
     }
 
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    /**
+     * Get the list of businesses from the API
+     * @param query
+     * @return
+     */
     public MutableLiveData<List<YelpResponse.YelpBusiness>> getYelpResponse(String query) {
        final  MutableLiveData<List<YelpResponse.YelpBusiness>> yelpResponseLiveData = new MutableLiveData<>();
 
@@ -65,6 +74,13 @@ public class YelpRepo {
        });
        return yelpResponseLiveData;
     }
+
+    /**
+     * @deprecated use other getYelpResponse() instead
+     * @param query
+     * @param sortBy
+     * @return
+     */
     public MutableLiveData<List<YelpResponse.YelpBusiness>> getYelpResponse(String query, String sortBy) {
        final  MutableLiveData<List<YelpResponse.YelpBusiness>> yelpResponseLiveData = new MutableLiveData<>();
 
@@ -93,16 +109,19 @@ public class YelpRepo {
        return yelpResponseLiveData;
     }
 
+    /**
+     * Get all the businesses from the database
+     * @param yelpBusiness LiveData object to hold the list of businesses
+     */
     public void insertFavoriteIntoDatabase(YelpResponse.YelpBusiness yelpBusiness) {
         Log.d(TAG, "test: " + yelpBusiness.name);
-        // insert this yelp business into database from LocalYelpDatabase
         database.insert(yelpBusiness);
     }
-    // save the list in the cache
-    public void saveLastQuery(String query) {
-        //TODO implement caching call here ... someday
-    }
 
+    /**
+     * Get all favorites from database
+     * @return List of YelpBusiness
+     */
     public List<YelpResponse.YelpBusiness> getFavoriteFromDatabase() {
         // create a new array list to store the favorite yelp businesses
         Cursor favoriteYelpBusinessesCursor = database.getAll();
@@ -113,8 +132,14 @@ public class YelpRepo {
         return favoriteYelpBusinesses;
     }
 
-    // create an alert to ask the user if they want to insert this yelp business into the database
-    public void askUserIfAddToDatabase(YelpResponse.YelpBusiness yelpBusiness) {
+    /**
+     * create an alert to ask the user if they want to insert this yelp business into the database
+     * @param yelpBusiness the yelp business to insert
+     * @return an alert dialog
+     */
+    public AlertDialog.Builder askUserIfAddToDatabase(YelpResponse.YelpBusiness yelpBusiness) {
+        Log.d(TAG, "askUserIfAddToDatabase: " + yelpBusiness.name);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Add to favorites?");
         builder.setMessage(yelpBusiness.name);
@@ -124,6 +149,7 @@ public class YelpRepo {
         builder.setNegativeButton("No", (dialog, which) -> {
             dialog.dismiss();
         });
-        builder.show();
+        return builder;
     }
+
 }

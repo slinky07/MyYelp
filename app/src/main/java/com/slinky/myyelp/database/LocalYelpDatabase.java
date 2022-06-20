@@ -45,6 +45,10 @@ public class LocalYelpDatabase extends SQLiteOpenHelper {
         //do nothing for now. unimplemented.
     }
 
+    /**
+     * Inserts a new restaurant into the database from a YelpResponse object.
+     * @param business
+     */
     public void insert(YelpResponse.YelpBusiness business) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -59,13 +63,19 @@ public class LocalYelpDatabase extends SQLiteOpenHelper {
         db.close();
     }
 
-    // delete a record form database
+    /**
+     * doesn't seem to work yet.
+     * @param id the id of the record to delete
+     */
     public void delete(int id) {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(TABLE_NAME, "favorite_ID = ?", new String[] {String.valueOf(id)});
     }
 
-    // get list of all records in database
+    /**
+     * get all restaurants from favorite_yelp_restaurants table
+     * @return Cursor of all restaurants
+     */
     public Cursor getAll() {
         String query = "SELECT * FROM " + TABLE_NAME;
 
@@ -73,7 +83,9 @@ public class LocalYelpDatabase extends SQLiteOpenHelper {
         return db.rawQuery(query, null);
     }
 
-    // drop database
+    /**
+     * drop database table if it exists
+     */
     public void drop() {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
