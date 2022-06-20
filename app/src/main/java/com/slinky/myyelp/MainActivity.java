@@ -1,5 +1,6 @@
 package com.slinky.myyelp;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
@@ -25,9 +26,10 @@ public class MainActivity extends AppCompatActivity {
     private final String TAG = getClass().getSimpleName();
     private SearchView searchView;
     private Boolean isDefault = true;
+    private String lastQuery = "";
+    private String defaultQuery = "";
     private ActivityMainBinding binding;
     private YelpAdapter yelpAdapter;
-    private String lastQuery = "";
     YelpViewModel yelpViewModel;
 
     @Override
@@ -36,46 +38,29 @@ public class MainActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         Log.d(TAG, "onCreate: ");
 
+        getSupportActionBar().hide();
+        searchViewListener();
         initUI();
         spinner();
         defaultQuery();
         setNavigationDrawer();
+
    }
 
     private void initUI() {
-//        yelpViewModel = new YelpViewModel(this);
-//        rvListener = yelpViewModel.setRVListener();
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         yelpAdapter = new YelpAdapter(MainActivity.this);
         binding.recyclerView.setAdapter(yelpAdapter);
 
     }
 
-    /**
-     * set menu and search view
-      * @param menu
-     * @return
-     */
-  public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.menu, menu);
-
-    setSearchView(menu);
-    searchViewListener();
-    return super.onCreateOptionsMenu(menu);
-  }
-
-
-  private void setSearchView(Menu menu) {
-      MenuItem searchItem = menu.findItem(R.id.search_bar_ID);
-
-      searchView = (SearchView) searchItem.getActionView();
-      searchView.setQueryHint(getString(R.string.search_bar_hint));
-  }
 
     /**
      * This method is used to set the searchView listener
      */
-   private void searchViewListener() {
+    private void searchViewListener() {
+       // initialize the searchView
+        searchView = binding.searchView;
        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
            @Override
            public boolean onQueryTextSubmit(String query) {
@@ -97,14 +82,11 @@ public class MainActivity extends AppCompatActivity {
      * @param query search query
      */
     private void requestYelpResponse(String query) {
-        /*if (query.equals(lastQuery)) {
-            return;
-        }*/
         if (!query.equalsIgnoreCase("poutine")) {
             isDefault = false;
         }
         lastQuery = query;
-      if (YelpClient.isNetworkAvailable(MainActivity.this)) {
+        if (YelpClient.isNetworkAvailable(MainActivity.this)) {
           yelpViewModel = new YelpViewModel(MainActivity.this);
 
           yelpViewModel.getYelpResponse(query).observe(MainActivity.this, yelpBusinesses -> {
@@ -115,18 +97,33 @@ public class MainActivity extends AppCompatActivity {
                     yelpAdapter.notifyDataSetChanged(); //TODO improve this
               }
           });
-      } else {
+        } else {
           Toast.makeText(MainActivity.this, "No network available", Toast.LENGTH_LONG).show();
-      }
-   }
+    }
+}
+
 
     /**
-     * default querry for the yelp api
+     * default query for the yelp api
      */
     private void defaultQuery() {
-        requestYelpResponse(lastQuery);
-        Log.d(TAG, "defaultQuery");
+        //get random string from defaultFoods array
+        String query = getDefaultQuery();
+        requestYelpResponse(query);
+        Log.d(TAG, "defaultQuery: " + query);
         isDefault = true;
+    }
+
+    /**
+     * get random string from defaultFoods array
+     * @return random string
+     */
+    private String getDefaultQuery() {
+        return getResources().
+                getStringArray(R.array.defaultFoods)
+                [(int) (Math.random() * getResources().
+                                getStringArray(R.array.defaultFoods).
+                                length)];
     }
 
     /**
@@ -191,10 +188,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-@Override
-    public void onRestart() {
-        super.onRestart();
-        Log.d(TAG, "onRestart"); // for logging
+    @Override
+        public void onRestart() {
+            super.onRestart();
+            Log.d(TAG, "onRestart"); // for logging
+        }
     }
-}
 

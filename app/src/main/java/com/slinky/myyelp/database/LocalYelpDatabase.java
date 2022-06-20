@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.slinky.myyelp.yelp_api.YelpResponse;
 
@@ -43,33 +44,6 @@ public class LocalYelpDatabase extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         //do nothing for now. unimplemented.
-    }
-
-    /**
-     * Inserts a new restaurant into the database from a YelpResponse object.
-     * @param business
-     */
-    public void insert(YelpResponse.YelpBusiness business) {
-        SQLiteDatabase db = getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("name", business.name);
-        values.put("address", business.location.toString());
-        values.put("phone", business.displayPhone);
-        values.put("price", business.price);
-        values.put("rating", business.rating);
-        values.put("category", business.categoryToString());
-        values.put("image_url", business.imageUrl);
-        db.insert(TABLE_NAME, null, values);
-        db.close();
-    }
-
-    /**
-     * doesn't seem to work yet.
-     * @param id the id of the record to delete
-     */
-    public void delete(int id) {
-        SQLiteDatabase db = getWritableDatabase();
-        db.delete(TABLE_NAME, "favorite_ID = ?", new String[] {String.valueOf(id)});
     }
 
     /**

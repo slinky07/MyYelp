@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import com.slinky.myyelp.database.DatabaseLogic;
 import com.slinky.myyelp.database.LocalYelpDatabase;
 import com.slinky.myyelp.yelp_api.YelpAPI;
 import com.slinky.myyelp.yelp_api.YelpClient;
@@ -60,6 +61,7 @@ public class YelpRepo {
                if (response.isSuccessful() && response.body() != null) {
                    yelpResponseLiveData.setValue(response.body().businesses);
                    Log.d(TAG, "onResponse size: " + response.body().toString());
+
                    if (response.body().total > 0) {
                        Toast.makeText(context, "Total: " + response.body().total, Toast.LENGTH_SHORT).show();
                    } else {
@@ -69,53 +71,10 @@ public class YelpRepo {
 
            @Override
            public void onFailure(Call<YelpResponse> call, Throwable t) {
-               Log.d("SlinkyTest", "Error: " + t.getMessage());
+               Log.d(TAG, "Error: " + t.getMessage());
            }
        });
        return yelpResponseLiveData;
-    }
-
-    /**
-     * @deprecated use other getYelpResponse() instead
-     * @param query
-     * @param sortBy
-     * @return
-     */
-    public MutableLiveData<List<YelpResponse.YelpBusiness>> getYelpResponse(String query, String sortBy) {
-       final  MutableLiveData<List<YelpResponse.YelpBusiness>> yelpResponseLiveData = new MutableLiveData<>();
-
-       YelpAPI yelpAPI = new YelpClient().build();
-       yelpAPI.getBusinesses(query, "Montreal", "rating").enqueue(new Callback<>() {
-           @Override
-           public void onResponse(@NonNull Call<YelpResponse> call, @NonNull Response<YelpResponse> response) {
-               Log.d(TAG, "onResponse: " + response.body().toString());
-
-               if (response.isSuccessful() && response.body() != null) {
-                   yelpResponseLiveData.setValue(response.body().businesses);
-                   Log.d(TAG, "onResponse size: " + response.body().toString());
-                   if (response.body().total > 0) {
-                       Toast.makeText(context, "Total: " + response.body().total, Toast.LENGTH_SHORT).show();
-                   } else {
-                       Toast.makeText(context, "No results found", Toast.LENGTH_LONG).show();
-                   }
-               }
-           }
-
-           @Override
-           public void onFailure(Call<YelpResponse> call, Throwable t) {
-               Log.d("SlinkyTest", "Error: " + t.getMessage());
-           }
-       });
-       return yelpResponseLiveData;
-    }
-
-    /**
-     * Get all the businesses from the database
-     * @param yelpBusiness LiveData object to hold the list of businesses
-     */
-    public void insertFavoriteIntoDatabase(YelpResponse.YelpBusiness yelpBusiness) {
-        Log.d(TAG, "test: " + yelpBusiness.name);
-        database.insert(yelpBusiness);
     }
 
     /**
@@ -137,14 +96,41 @@ public class YelpRepo {
      * @param yelpBusiness the yelp business to insert
      * @return an alert dialog
      */
-    public AlertDialog.Builder askUserIfAddToDatabase(YelpResponse.YelpBusiness yelpBusiness) {
+    public AlertDialog.Builder askUserIfAddToDatabase(YelpResponse.YelpBusiness yelpBusiness, DatabaseLogic dbl) {
         Log.d(TAG, "askUserIfAddToDatabase: " + yelpBusiness.name);
+        return buildDialog(null, yelpBusiness,-1 , dbl);
+    }
 
+    /**
+     * create an alert to ask the user if they want to delete this yelp business from their favorites
+     * @param adapter position of the yelp business in the adapter
+     * @param yelpBusiness the yelp business to delete
+     * @param position the position of the yelp business in the adapter
+     * @param dbl    the database logic
+     * @return an alert dialog
+     */
+    public AlertDialog.Builder askRemoveFromDB(YelpAdapter adapter, YelpResponse.YelpBusiness yelpBusiness, int position, DatabaseLogic dbl) {
+        Log.d(TAG, "askUserIfRemoveFromDatabase: " + yelpBusiness.name);
+        return buildDialog(adapter, yelpBusiness, position, dbl);
+    }
+
+    /**
+     * generic alert dialog builder
+     * @param adapter the adapter to ask to refresh. can be null if you are not removing.
+     * @param yelpBusiness the yelp business to insert or delete
+     * @param position the position of the yelpBusiness in the adapter. can be null if you are not removing.
+     * @param dbl the database logic
+     * @return an alert dialog
+     */
+    private AlertDialog.Builder buildDialog(YelpAdapter adapter,YelpResponse.YelpBusiness yelpBusiness, int position, DatabaseLogic dbl) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Add to favorites?");
+        builder.setTitle("Remove from favorites?");
         builder.setMessage(yelpBusiness.name);
         builder.setPositiveButton("Yes", (dialog, which) -> {
-            insertFavoriteIntoDatabase(yelpBusiness);
+            databaseLogic(dbl, yelpBusiness);
+            if (adapter != null) {
+                adapter.notifyItemRemoved(position);
+            }
         });
         builder.setNegativeButton("No", (dialog, which) -> {
             dialog.dismiss();
@@ -152,4 +138,7 @@ public class YelpRepo {
         return builder;
     }
 
+    private void databaseLogic(DatabaseLogic databaseLogic, YelpResponse.YelpBusiness yelpBusiness) {
+        databaseLogic.action(yelpBusiness);
+    }
 }

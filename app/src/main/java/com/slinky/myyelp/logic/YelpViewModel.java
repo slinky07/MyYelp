@@ -33,21 +33,6 @@ public class YelpViewModel extends ViewModel {
         return yelpResponseLiveData;
     }
 
-    /**
-     * @deprecated  this method is obsolete for the assignment's purpose
-     * Yelp Api sorts by their own internal logic, not by actual rating digit.
-     * so a lower rating will be higher in the list if it has more reviews, for example.
-     * @param query the query string
-     * @param sortBy is sort kind.
-     * @return list of yelp businesses sorted by the sortBy kind.
-     */
-    public LiveData<List<YelpResponse.YelpBusiness>> getYelpResponse(String query, String sortBy) {
-        if (yelpResponseLiveData == null) {
-            yelpResponseLiveData = yelpRepo.getYelpResponse(query, sortBy);
-        }
-        return yelpResponseLiveData;
-    }
-
     public void sortByPrice(Context applicationContext) {
         context = applicationContext;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

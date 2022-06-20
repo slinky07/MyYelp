@@ -5,7 +5,29 @@
     android:layout_width="match_parent"
     android:id="@+id/drawer_layout_main"
     android:layout_height="match_parent">
-<!--    cardview for a spinner -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/red_500"
+        android:orientation="vertical"
+        android:padding="10dp">
+        <SearchView
+            android:iconifiedByDefault="false"
+            android:id="@+id/searchView"
+            android:background="@drawable/search_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusable="false"
+            android:focusableInTouchMode="false">
+        </SearchView>
+    </LinearLayout>
+
+    <!--    cardview for a spinner -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -62,6 +84,7 @@
     </androidx.recyclerview.widget.RecyclerView>
 
     </LinearLayout>
+</LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"

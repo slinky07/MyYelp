@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -15,6 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.slinky.myyelp.R;
+import com.slinky.myyelp.database.DatabaseLogic;
+import com.slinky.myyelp.database.Delete;
+import com.slinky.myyelp.database.Insert;
+import com.slinky.myyelp.database.LocalYelpDatabase;
 import com.slinky.myyelp.databinding.ListItemBinding;
 import com.slinky.myyelp.yelp_api.YelpResponse;
 
@@ -63,15 +66,26 @@ public class YelpAdapter extends RecyclerView.Adapter<YelpAdapter.YelpViewHolder
     private void listenerLogic(View v, YelpAdapter.YelpViewHolder holder, int position ) {
         Log.d(TAG, "onBindViewHolder: clicked on: " + businesses.get(0).name);
         yelpRepo.setContext(holder.binding.getRoot().getContext()); // to solve the context problem
-
+        LocalYelpDatabase database = LocalYelpDatabase.getInstance(holder.binding.getRoot().getContext());
+        DatabaseLogic dbl = new Insert(database);
         AlertDialog.Builder builder; // to solve the context problem
-        builder = yelpRepo.askUserIfAddToDatabase(businesses.get(position));
+        builder = yelpRepo.askUserIfAddToDatabase(businesses.get(position), dbl);
 
         if (!businesses.get(position).isFavorite) {
             builder.show();
         } else {
-            Toast.makeText(holder.binding.getRoot().getContext(), "Already in favorites", Toast.LENGTH_SHORT).show();
+            favoriteListenerLogic(v, holder, position, database);
         }
+    }
+
+    private void favoriteListenerLogic(View v, YelpAdapter.YelpViewHolder holder, int position, LocalYelpDatabase database) {
+        Log.d(TAG, "onBindViewHolder: clicked on: " + businesses.get(0).name);
+        AlertDialog.Builder builder;
+        DatabaseLogic dbl = new Delete(database);
+        builder = yelpRepo.askRemoveFromDB(this, businesses.get(position), position, dbl);
+        builder.show();
+
+
     }
 
     /**

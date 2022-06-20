@@ -5,4 +5,49 @@
         <item>Rating</item>
         <item>Price</item>
     </string-array>
+    <string-array name="defaultFoods">
+        <item>popular</item>
+        <item>pizza</item>
+        <item>sushi</item>
+        <item>vegan</item>
+        <item>steak</item>
+        <item>lasagna</item>
+        <item>smoked meat</item>
+        <item>poutine</item>
+        <item>asian</item>
+        <item>ramen</item>
+        <item>soba</item>
+        <item>belle province</item>
+        <item>bar</item>
+        <item>mcdo</item>
+        <item>coffee</item>
+        <item>coffee shop</item>
+        <item>homemade</item>
+        <item>indian</item>
+        <item>mexican</item>
+        <item>italian</item>
+        <item>peruvian</item>
+        <item>caribbean</item>
+        <item>fruits</item>
+        <item>fish</item>
+        <item>karaoke</item>
+        <item>buffet</item>
+        <item>tea</item>
+        <item>chinatown</item>
+        <item>subway</item>
+        <item>breakfast</item>
+        <item>pancake</item>
+        <item>crepes</item>
+        <item>bagels</item>
+        <item>soup</item>
+        <item>sausage</item>
+        <item>salmon</item>
+        <item>tartar</item>
+        <item>cocktail</item>
+        <item>beaver tails</item>
+        <item>canadian breakfast</item>
+        <item>ceasar cocktail</item>
+        <item>yorkshire pudding</item>
+
+    </string-array>
 </resources>

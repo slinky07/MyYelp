@@ -135,21 +135,6 @@ public class YelpResponse {
                         ", " +
                         country;
             }
-
         }
     }
-
-    /**
-     * used for testing only
-     * @return String representation of YelpResponse
-     */
-    @NonNull
-    @Override
-    public String toString() {
-        return "YelpResponse{" +
-                " [...]" +
-                ", total=" + total +
-                '}';
-    }
-
 }
