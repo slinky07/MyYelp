@@ -1,0 +1,158 @@
+@startuml
+class com.slinky.myyelp.logic.YelpViewModel {
+- YelpRepo yelpRepo
+- Context context
+- MutableLiveData<List<YelpResponse.YelpBusiness>> yelpResponseLiveData
++ LiveData<List<YelpResponse.YelpBusiness>> getYelpResponse(String)
++ void sortByPrice(Context)
+- void sortByPriceLogic()
++ void sortByRating()
+- void sortByRatingLogic()
+- YelpResponse.YelpBusiness getYelpBusiness(int)
+}
+class com.slinky.myyelp.MainActivity {
+- String TAG
+- SearchView searchView
+- Boolean isDefault
+- String lastQuery
+- String defaultQuery
+- ActivityMainBinding binding
+- YelpAdapter yelpAdapter
+~ YelpViewModel yelpViewModel
+# void onCreate(Bundle)
+- void initUI()
+- void searchViewListener()
+- void requestYelpResponse(String)
+- void defaultQuery()
+- String getDefaultQuery()
+- void spinner()
+- void sortByPrice()
+- void sortByRating()
+- void setNavigationDrawer()
++ void onRestart()
+}
+class com.slinky.myyelp.database.Insert {
+~ LocalYelpDatabase database
++ void action(YelpResponse.YelpBusiness)
+}
+interface com.slinky.myyelp.database.DatabaseLogic {
+~ void action(YelpResponse.YelpBusiness)
+}
+class com.slinky.myyelp.logic.YelpRepo {
+- String TAG
+- {static} YelpRepo instance
+- Context context
+~ LocalYelpDatabase database
++ {static} YelpRepo getInstance(Context)
++ void setContext(Context)
++ MutableLiveData<List<YelpResponse.YelpBusiness>> getYelpResponse(String)
+- void showToasts(YelpResponse)
++ List<YelpResponse.YelpBusiness> getFavoriteFromDatabase()
++ AlertDialog.Builder askUserIfAddToDatabase(YelpResponse.YelpBusiness,DatabaseLogic)
++ AlertDialog.Builder askRemoveFromDB(YelpAdapter,YelpResponse.YelpBusiness,int,DatabaseLogic)
+- AlertDialog.Builder buildDialog(YelpAdapter,YelpResponse.YelpBusiness,int,DatabaseLogic,String)
+- void databaseLogic(DatabaseLogic,YelpResponse.YelpBusiness)
+}
+class com.slinky.myyelp.database.Delete {
+~ LocalYelpDatabase database
++ void action(YelpResponse.YelpBusiness)
+}
+interface com.slinky.myyelp.yelp_api.YelpAPI {
+~ Call<YelpResponse> getBusinesses(String,String)
+~ Call<YelpResponse> getBusinesses(String,String,String)
+}
+class com.slinky.myyelp.logic.YelpAdapter {
+- {static} String TAG
+- List<YelpResponse.YelpBusiness> businesses
+- boolean isFavorites
+~ YelpRepo yelpRepo
++ void setBusinessesList(List<YelpResponse.YelpBusiness>)
++ int getItemCount()
++ void setIsFavorites(boolean)
++ YelpAdapter.YelpViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(YelpAdapter.YelpViewHolder,int)
+- void listenerLogic(YelpAdapter.YelpViewHolder,int)
+- void favoriteListenerLogic(int,LocalYelpDatabase)
+# void onBindSetElements(YelpAdapter.YelpViewHolder,int)
+# void onBindSetElementsFavorites(YelpAdapter.YelpViewHolder,int)
++ void onBindSetCombinedLogic(YelpAdapter.YelpViewHolder,int)
+}
+class com.slinky.myyelp.logic.YelpAdapter.YelpViewHolder {
+- ListItemBinding binding
+}
+class com.slinky.myyelp.yelp_api.YelpClient {
+- String KEY
++ YelpAPI build()
++ {static} boolean isNetworkAvailable(Context)
+}
+class com.slinky.myyelp.yelp_api.YelpResponse {
++ List<YelpBusiness> businesses
++ int total
+}
+class com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness {
++ String id
++ String name
++ String imageUrl
++ String url
++ float rating
++ String price
++ YelpLocation location
++ String displayPhone
++ ArrayList<YelpCategory> categories
++ String customCategory
++ boolean isFavorite
++ String categoryToString()
+}
+class com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness.YelpCategory {
++ String title
+}
+class com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness.YelpLocation {
++ String address1
++ String city
++ String state
++ String zipCode
++ String country
++ String State
++ ArrayList<String> displayAddress
++ String customAddress
++ String toString()
+}
+class com.slinky.myyelp.database.LocalYelpDatabase {
++ {static} String DB_NAME
++ {static} int DB_VERSION
++ {static} String TABLE_NAME
++ {static} String TABLE_PK
+- {static} LocalYelpDatabase instance
++ {static} LocalYelpDatabase getInstance(Context)
++ void onCreate(SQLiteDatabase)
++ void onUpgrade(SQLiteDatabase,int,int)
++ Cursor getAll()
++ void dropTable()
+}
+class com.slinky.myyelp.FavoriteActivity {
+- String TAG
+- ActivityFavoriteBinding binding
+- YelpAdapter yelpAdapter
+# void onCreate(Bundle)
+- void setNavigationDrawer()
+- void sendToMain()
+- void showFavouriteList()
+- void initUI()
+- void setAdapterBool(boolean)
++ void finish()
+}
+
+
+androidx.lifecycle.ViewModel <|-- com.slinky.myyelp.logic.YelpViewModel
+androidx.appcompat.app.AppCompatActivity <|-- com.slinky.myyelp.MainActivity
+com.slinky.myyelp.database.DatabaseLogic <|.. com.slinky.myyelp.database.Insert
+com.slinky.myyelp.database.DatabaseLogic <|.. com.slinky.myyelp.database.Delete
+com.slinky.myyelp.logic.Adapter <|-- com.slinky.myyelp.logic.YelpAdapter
+com.slinky.myyelp.logic.YelpAdapter +.. com.slinky.myyelp.logic.YelpAdapter.YelpViewHolder
+com.slinky.myyelp.logic.ViewHolder <|-- com.slinky.myyelp.logic.YelpAdapter.YelpViewHolder
+com.slinky.myyelp.yelp_api.YelpResponse +.. com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness
+com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness +.. com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness.YelpCategory
+com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness +.. com.slinky.myyelp.yelp_api.YelpResponse.YelpBusiness.YelpLocation
+android.database.sqlite.SQLiteOpenHelper <|-- com.slinky.myyelp.database.LocalYelpDatabase
+androidx.appcompat.app.AppCompatActivity <|-- com.slinky.myyelp.FavoriteActivity
+@enduml
