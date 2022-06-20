@@ -3,6 +3,7 @@ package com.slinky.myyelp.logic;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -16,6 +17,7 @@ import java.util.List;
 
 public class YelpViewModel extends ViewModel {
 
+    private static final String TAG = YelpViewModel.class.getSimpleName();
     private YelpRepo yelpRepo;
     @SuppressLint("StaticFieldLeak")
     private Context context;
@@ -41,14 +43,13 @@ public class YelpViewModel extends ViewModel {
 
     /**
      * sort by price low to high where some values are null. put null values at the start of the list.
-     * @param applicationContext
      */
-    public void sortByPrice(Context applicationContext) {
-        context = applicationContext;
+    public void sortByPrice() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             sortByPriceLogic();
         } else {
             Toast.makeText(context, "Api level under required level", Toast.LENGTH_LONG).show();
+            Log.e(TAG, "Api level under required level, please use Nougat or above");
         }
     }
 
@@ -81,17 +82,12 @@ public class YelpViewModel extends ViewModel {
      * sort by rating logic float rating high to low where some values are null. put null values at the start of the list.
      */
     public void sortByRating() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             sortByRatingLogic();
-        } else {
-            Toast.makeText(context, "Api level under required level", Toast.LENGTH_LONG).show();
-        }
     }
 
     /**
      * sort list by float rating high to low  where some values are null. put null values at the start of the list.
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
      private void sortByRatingLogic() {
         List<YelpResponse.YelpBusiness> yelpBusinessList = yelpResponseLiveData.getValue();
 

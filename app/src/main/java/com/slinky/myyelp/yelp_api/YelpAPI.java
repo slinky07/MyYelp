@@ -26,18 +26,5 @@ public interface YelpAPI {
     Call<YelpResponse> getBusinesses(@Query("term") String term,
                                      @Query("location") String location,
                                      @Query("sort_by") String sortBy);
-    /*
-    @GET("businesses/search")
-    Call<YelpResponse> getBusinesses(@Query("term") String term,
-                                     @Query("location") String location,
-                                     @Query("limit") int limit,
-                                     @Query("offset") int offset,
-                                     @Query("sort_by") String sort_by,
-                                     @Query("radius") int radius,
-                                     @Query("categories") String categories,
-                                     @Query("price") String price,
-                                     @Query("open_now") String open_now,
-                                     @Query("open_at") String open_at);
-    */
 
 }

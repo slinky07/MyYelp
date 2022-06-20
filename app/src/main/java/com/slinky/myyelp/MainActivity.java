@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sortByPrice() {
-        yelpViewModel.sortByPrice(MainActivity.this);
+        yelpViewModel.sortByPrice();
     }
 
     private void sortByRating() {

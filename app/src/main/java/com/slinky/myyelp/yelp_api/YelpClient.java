@@ -15,7 +15,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class YelpClient {
-    private String KEY = "Bearer e7UrZfz1QkSdg454zNKDGmAJdSFyqxqmfZH5z35xW5SRSJRvizfZtqTtYjt-DkdOhny_-_SFRC6vFGW0GWezCp-mSfgC_Yhh-x33FnuCVMiTDmFuEjO4bgHV9KmjYnYx";
+    private final String KEY = "Bearer e7UrZfz1QkSdg454zNKDGmAJdSFyqxqmfZH5z35xW5SRSJRvizfZtqTtYjt-DkdOhny_-_SFRC6vFGW0GWezCp-mSfgC_Yhh-x33FnuCVMiTDmFuEjO4bgHV9KmjYnYx";
 
     public YelpAPI build() {
 
