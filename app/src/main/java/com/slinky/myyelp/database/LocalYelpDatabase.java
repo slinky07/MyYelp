@@ -60,9 +60,10 @@ public class LocalYelpDatabase extends SQLiteOpenHelper {
     /**
      * drop database table if it exists
      */
-    public void drop() {
+    public void dropTable() {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
     }
+
 
 }

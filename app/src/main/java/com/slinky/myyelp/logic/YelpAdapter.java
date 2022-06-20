@@ -42,6 +42,10 @@ public class YelpAdapter extends RecyclerView.Adapter<YelpAdapter.YelpViewHolder
         return businesses != null ? businesses.size() : 0;
     }
 
+    public void setIsFavorites(boolean favorites) {
+        isFavorites = favorites;
+    }
+
     @NonNull
     @Override
     public YelpAdapter.YelpViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -58,30 +62,35 @@ public class YelpAdapter extends RecyclerView.Adapter<YelpAdapter.YelpViewHolder
         } else {
             onBindSetElementsFavorites(holder, position);
         }
-        holder.binding.getRoot().setOnClickListener(v -> listenerLogic(v, holder, position));
+        holder.binding.getRoot().setOnClickListener(v -> listenerLogic(holder, position));
     }
+
     /**
      * listenerLogic
      */
-    private void listenerLogic(View v, YelpAdapter.YelpViewHolder holder, int position ) {
-        Log.d(TAG, "onBindViewHolder: clicked on: " + businesses.get(0).name);
+    private void listenerLogic(YelpAdapter.YelpViewHolder holder, int position ) {
+        Log.d(TAG, "listenerLogic: insert ");
         yelpRepo.setContext(holder.binding.getRoot().getContext()); // to solve the context problem
+
         LocalYelpDatabase database = LocalYelpDatabase.getInstance(holder.binding.getRoot().getContext());
-        DatabaseLogic dbl = new Insert(database);
         AlertDialog.Builder builder; // to solve the context problem
+        DatabaseLogic dbl = new Insert(database);
+
         builder = yelpRepo.askUserIfAddToDatabase(businesses.get(position), dbl);
 
         if (!businesses.get(position).isFavorite) {
             builder.show();
         } else {
-            favoriteListenerLogic(v, holder, position, database);
+            favoriteListenerLogic(position, database);
         }
     }
 
-    private void favoriteListenerLogic(View v, YelpAdapter.YelpViewHolder holder, int position, LocalYelpDatabase database) {
-        Log.d(TAG, "onBindViewHolder: clicked on: " + businesses.get(0).name);
+    private void favoriteListenerLogic(int position, LocalYelpDatabase database) {
+        Log.d(TAG, "favoriteListenerLogic: delete");
+
         AlertDialog.Builder builder;
         DatabaseLogic dbl = new Delete(database);
+
         builder = yelpRepo.askRemoveFromDB(this, businesses.get(position), position, dbl);
         builder.show();
 
@@ -98,7 +107,6 @@ public class YelpAdapter extends RecyclerView.Adapter<YelpAdapter.YelpViewHolder
             super(binding.getRoot());
             this.binding = binding;
         }
-
     }
 
     /**
@@ -148,7 +156,4 @@ public class YelpAdapter extends RecyclerView.Adapter<YelpAdapter.YelpViewHolder
                 .into(bind.restaurantIV);
     }
 
-    public void setIsFavorites(boolean favorites) {
-        isFavorites = favorites;
-    }
 }

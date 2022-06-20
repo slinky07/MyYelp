@@ -56,17 +56,13 @@ public class YelpRepo {
        yelpAPI.getBusinesses(query, "Montreal").enqueue(new Callback<>() {
            @Override
            public void onResponse(@NonNull Call<YelpResponse> call, @NonNull Response<YelpResponse> response) {
-               Log.d(TAG, "onResponse: " + response.body().toString());
+               YelpResponse json = response.body();
 
-               if (response.isSuccessful() && response.body() != null) {
-                   yelpResponseLiveData.setValue(response.body().businesses);
-                   Log.d(TAG, "onResponse size: " + response.body().toString());
-
-                   if (response.body().total > 0) {
-                       Toast.makeText(context, "Total: " + response.body().total, Toast.LENGTH_SHORT).show();
-                   } else {
-                       Toast.makeText(context, "No results found", Toast.LENGTH_LONG).show();
-                   }               }
+               if (response.isSuccessful() && json != null) {
+                   yelpResponseLiveData.setValue(json.businesses);
+                   Log.d(TAG, "onResponse size: " + json.total);
+                   showToasts(json);
+               }
            }
 
            @Override
@@ -75,6 +71,18 @@ public class YelpRepo {
            }
        });
        return yelpResponseLiveData;
+    }
+
+    /**
+     * Show the Toast messages
+     * @param response the response from the API
+     */
+    private void showToasts(YelpResponse response ){
+        if (response.total > 0) {
+            Toast.makeText(context, "Total: " + response.total, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "No results found", Toast.LENGTH_LONG).show();
+        }
     }
 
     /**
@@ -98,7 +106,7 @@ public class YelpRepo {
      */
     public AlertDialog.Builder askUserIfAddToDatabase(YelpResponse.YelpBusiness yelpBusiness, DatabaseLogic dbl) {
         Log.d(TAG, "askUserIfAddToDatabase: " + yelpBusiness.name);
-        return buildDialog(null, yelpBusiness,-1 , dbl);
+        return buildDialog(null, yelpBusiness,-1 , dbl, "Add to favorites?");
     }
 
     /**
@@ -111,7 +119,7 @@ public class YelpRepo {
      */
     public AlertDialog.Builder askRemoveFromDB(YelpAdapter adapter, YelpResponse.YelpBusiness yelpBusiness, int position, DatabaseLogic dbl) {
         Log.d(TAG, "askUserIfRemoveFromDatabase: " + yelpBusiness.name);
-        return buildDialog(adapter, yelpBusiness, position, dbl);
+        return buildDialog(adapter, yelpBusiness, position, dbl, "Remove from favorites?");
     }
 
     /**
@@ -122,14 +130,17 @@ public class YelpRepo {
      * @param dbl the database logic
      * @return an alert dialog
      */
-    private AlertDialog.Builder buildDialog(YelpAdapter adapter,YelpResponse.YelpBusiness yelpBusiness, int position, DatabaseLogic dbl) {
+    private AlertDialog.Builder buildDialog(YelpAdapter adapter,YelpResponse.YelpBusiness yelpBusiness, int position, DatabaseLogic dbl, String str) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Remove from favorites?");
+        builder.setTitle(str);
         builder.setMessage(yelpBusiness.name);
         builder.setPositiveButton("Yes", (dialog, which) -> {
             databaseLogic(dbl, yelpBusiness);
             if (adapter != null) {
                 adapter.notifyItemRemoved(position);
+                //TODO fix this: when an item is added, and then i remove any item, the adapter keeps
+                // adding the added item, but only in this instance. if i go out to search then come
+                // back to favs, the doubles are not there
             }
         });
         builder.setNegativeButton("No", (dialog, which) -> {

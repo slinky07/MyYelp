@@ -19,6 +19,5 @@ public class Delete implements DatabaseLogic {
         SQLiteDatabase db = database.getWritableDatabase();
 
         db.delete(LocalYelpDatabase.TABLE_NAME, "name = ?", new String[] {String.valueOf(business.name)});
-        db.close();
     }
 }

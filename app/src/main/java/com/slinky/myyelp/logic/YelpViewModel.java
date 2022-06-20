@@ -19,6 +19,7 @@ public class YelpViewModel extends ViewModel {
     private YelpRepo yelpRepo;
     @SuppressLint("StaticFieldLeak")
     private Context context;
+
     private MutableLiveData<List<YelpResponse.YelpBusiness>> yelpResponseLiveData; // live data to hold the yelp response
 
     public YelpViewModel(Context context) {
@@ -26,6 +27,11 @@ public class YelpViewModel extends ViewModel {
         this.context = context.getApplicationContext();
     }
 
+    /**
+     * gateway to get the yelp response
+     * @param query the query to search for
+     * @return the live data list of the yelp response
+     */
     public LiveData<List<YelpResponse.YelpBusiness>> getYelpResponse(String query) {
         if (yelpResponseLiveData == null) {
             yelpResponseLiveData = yelpRepo.getYelpResponse(query);
@@ -33,6 +39,10 @@ public class YelpViewModel extends ViewModel {
         return yelpResponseLiveData;
     }
 
+    /**
+     * sort by price low to high where some values are null. put null values at the start of the list.
+     * @param applicationContext
+     */
     public void sortByPrice(Context applicationContext) {
         context = applicationContext;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -67,6 +77,9 @@ public class YelpViewModel extends ViewModel {
 
     }
 
+    /**
+     * sort by rating logic float rating high to low where some values are null. put null values at the start of the list.
+     */
     public void sortByRating() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             sortByRatingLogic();
@@ -81,10 +94,12 @@ public class YelpViewModel extends ViewModel {
     @RequiresApi(api = Build.VERSION_CODES.N)
      private void sortByRatingLogic() {
         List<YelpResponse.YelpBusiness> yelpBusinessList = yelpResponseLiveData.getValue();
+
         if (yelpBusinessList != null) {
             for (int i = 1; i < yelpBusinessList.size(); i++) {
                 YelpResponse.YelpBusiness temp = yelpBusinessList.get(i);
                 int j = i;
+
                 while (j > 0 && yelpBusinessList.get(j - 1).rating < temp.rating) {
                     yelpBusinessList.set(j, yelpBusinessList.get(j - 1));
                     j--;
